@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>長輩也能輕鬆操作的手機、電腦與智慧手錶</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <h1>長輩也能輕鬆操作的手機、電腦與智慧手錶</h1>
+    <p class="subtitle">簡單操作教學</p>
+    <div class="font-switch" id="fontSwitch" role="group" aria-label="字級大小設定">
+      <span class="font-switch-text">字級</span>
+      <button type="button" class="font-btn" data-size="small">Ａ小</button>
+      <button type="button" class="font-btn" data-size="medium">Ａ中</button>
+      <button type="button" class="font-btn" data-size="large">Ａ大</button>
+    </div>
+  </header>
+
+  <nav class="category-nav" aria-label="主要分類">
+    <button type="button" class="cat-card" data-target="phone">
+      <span class="cat-icon" aria-hidden="true">📱</span>
+      <span class="cat-name">手機</span>
+      <span class="cat-sub">蘋果手機 / 安卓手機</span>
+    </button>
+    <button type="button" class="cat-card" data-target="computer">
+      <span class="cat-icon" aria-hidden="true">💻</span>
+      <span class="cat-name">電腦</span>
+      <span class="cat-sub">Windows / Mac</span>
+    </button>
+    <button type="button" class="cat-card" data-target="watch">
+      <span class="cat-icon" aria-hidden="true">⌚</span>
+      <span class="cat-name">智慧手錶</span>
+      <span class="cat-sub">Apple Watch / 安卓手錶</span>
+    </button>
+  </nav>
+
+  <main>
+    <!-- ================= 手機 ================= -->
+    <section id="phone" class="category-section" data-category="phone" aria-labelledby="phone-title">
+      <h2 id="phone-title">📱 手機</h2>
+      <p class="lead">選擇一個要教您的動作，我們會一步一步說明。</p>
+
+      <div class="task-grid" role="group" aria-label="手機可學習動作">
+        <button type="button" class="task-btn" data-task="call"><span class="task-emoji">📞</span>打電話給家人</button>
+        <button type="button" class="task-btn" data-task="message"><span class="task-emoji">💬</span>傳訊息給家人</button>
+        <button type="button" class="task-btn" data-task="photo"><span class="task-emoji">📷</span>拍照</button>
+      </div>
+
+      <div class="task-detail" hidden>
+        <div class="task-detail-header">
+          <span class="task-detail-icon" id="taskIcon">📞</span>
+          <h3 class="task-detail-title" id="taskTitle">打電話給家人</h3>
+          <button type="button" class="back-btn" id="taskBack">← 回選擇</button>
+        </div>
+        <div class="task-steps" id="taskSteps"></div>
+      </div>
+    </section>
+
+    <!-- ================= 電腦 ================= -->
+    <section id="computer" class="category-section" data-category="computer" aria-labelledby="computer-title">
+      <h2 id="computer-title">💻 電腦</h2>
+      <p class="lead">選擇一個要教您的動作，我們會一步一步說明。</p>
+
+      <div class="task-grid" role="group" aria-label="電腦可學習動作">
+        <button type="button" class="task-btn" data-task="browse"><span class="task-emoji">🌐</span>開啟網頁</button>
+        <button type="button" class="task-btn" data-task="screenshot"><span class="task-emoji">📸</span>截圖</button>
+        <button type="button" class="task-btn" data-task="fontsize"><span class="task-emoji">🔍</span>調整字體大小</button>
+      </div>
+
+      <div class="task-detail" hidden>
+        <div class="task-detail-header">
+          <span class="task-detail-icon" id="taskIconComputer">🌐</span>
+          <h3 class="task-detail-title" id="taskTitleComputer">開啟網頁</h3>
+          <button type="button" class="back-btn" id="taskBackComputer">← 回選擇</button>
+        </div>
+        <div class="task-steps" id="taskStepsComputer"></div>
+      </div>
+    </section>
+
+    <!-- ================= 智慧手錶 ================= -->
+    <section id="watch" class="category-section" data-category="watch" aria-labelledby="watch-title">
+      <h2 id="watch-title">⌚ 智慧手錶</h2>
+      <p class="lead">選擇一個要教您的動作，我們會一步一步說明。</p>
+
+      <div class="task-grid" role="group" aria-label="智慧手錶可學習動作">
+        <button type="button" class="task-btn" data-task="watch_call"><span class="task-emoji">📞</span>打電話 / 傳訊息</button>
+        <button type="button" class="task-btn" data-task="watch_health"><span class="task-emoji">❤️</span>看健康數據</button>
+        <button type="button" class="task-btn" data-task="watch_alarm"><span class="task-emoji">⏰</span>設定鬧鐘</button>
+      </div>
+
+      <div class="task-detail" hidden>
+        <div class="task-detail-header">
+          <span class="task-detail-icon" id="taskIconWatch">📞</span>
+          <h3 class="task-detail-title" id="taskTitleWatch">打電話 / 傳訊息</h3>
+          <button type="button" class="back-btn" id="taskBackWatch">← 回選擇</button>
+        </div>
+        <div class="task-steps" id="taskStepsWatch"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>需要更多協助時，請找家人或專業人士協助。</p>
+  </footer>
+
+  <button type="button" class="to-top" id="toTop">回到頂端 ↑</button>
+
+  <script src="script.js"></script>
+</body>
+</html>

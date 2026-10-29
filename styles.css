@@ -492,6 +492,16 @@ h1 {
   background: #092f6f;
 }
 
+.location-action-line {
+  background: #06c755;
+  color: #111111;
+}
+
+.location-action-line:hover,
+.location-action-line:focus-visible {
+  background: #05a847;
+}
+
 .location-actions {
   display: grid;
   grid-template-columns: 1fr;
@@ -505,6 +515,6 @@ h1 {
 
 @media (min-width: 700px) {
   .location-actions {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 }

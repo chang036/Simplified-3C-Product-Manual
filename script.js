@@ -105,7 +105,7 @@ const tasks = {
           "按一下藍色大按鈕「取得我的位置」。",
           "看到詢問時，按「允許」。",
           "等幾秒鐘，畫面會顯示您的位置。",
-          "按「分享給家人」，選擇要傳給的家人。",
+          "按「分享給家人」或「用 LINE 傳送」，選擇要傳給的家人。",
         ],
       },
       {
@@ -117,7 +117,7 @@ const tasks = {
           "按一下藍色大按鈕「取得我的位置」。",
           "看到詢問時，按「允許」。",
           "等幾秒鐘，畫面會顯示您的位置。",
-          "按「分享給家人」，選擇要傳給的家人。",
+          "按「分享給家人」或「用 LINE 傳送」，選擇要傳給的家人。",
         ],
       },
     ],
@@ -500,6 +500,9 @@ function createLocationCard() {
         <button type="button" class="location-action" id="locationCopyBtn">
           📋 複製位置連結
         </button>
+        <a class="location-action location-action-line" id="locationLineLink" href="#" target="_blank" rel="noopener">
+          💚 用 LINE 傳送
+        </a>
         <a class="location-action" id="locationSmsLink" href="#">
           💬 用簡訊傳送
         </a>
@@ -526,6 +529,7 @@ function wireLocationCard(card) {
   const mapLink = $("locationMapLink");
   const shareBtn = $("locationShareBtn");
   const copyBtn = $("locationCopyBtn");
+  const lineLink = $("locationLineLink");
   const smsLink = $("locationSmsLink");
 
   let lastLocation = null;
@@ -548,6 +552,11 @@ function wireLocationCard(card) {
   function buildSmsHref(message) {
     const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
     return "sms:" + (isIOS ? "&" : "?") + "body=" + encodeURIComponent(message);
+  }
+
+  function buildLineHref(message) {
+    // LINE 分享網址：開啟 LINE 後，讓使用者選擇要傳給哪位家人
+    return "https://line.me/R/msg/text/?" + encodeURIComponent(message);
   }
 
   function renderPosition(position) {
@@ -577,6 +586,7 @@ function wireLocationCard(card) {
     timeEl.textContent = "更新時間：" + timeText;
     mapLink.href = mapUrl;
     smsLink.href = buildSmsHref(lastLocation.message);
+    lineLink.href = buildLineHref(lastLocation.message);
 
     result.hidden = false;
     btnText.textContent = "🔄 重新取得位置";

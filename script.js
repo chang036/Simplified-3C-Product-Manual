@@ -91,6 +91,37 @@ const tasks = {
       },
     ],
   },
+  location: {
+    category: "phone",
+    icon: "📍",
+    title: "傳送我的位置給家人",
+    systems: [
+      {
+        id: "ios",
+        name: "蘋果手機（iPhone）",
+        icon: "🍎",
+        steps: [
+          "用 Safari 打開這個網站。",
+          "按一下藍色大按鈕「取得我的位置」。",
+          "看到詢問時，按「允許」。",
+          "等幾秒鐘，畫面會顯示您的位置。",
+          "按「分享給家人」，選擇要傳給的家人。",
+        ],
+      },
+      {
+        id: "android",
+        name: "安卓手機（Android）",
+        icon: "🤖",
+        steps: [
+          "用 Chrome 打開這個網站。",
+          "按一下藍色大按鈕「取得我的位置」。",
+          "看到詢問時，按「允許」。",
+          "等幾秒鐘，畫面會顯示您的位置。",
+          "按「分享給家人」，選擇要傳給的家人。",
+        ],
+      },
+    ],
+  },
   browse: {
     category: "computer",
     icon: "🌐",
@@ -274,7 +305,7 @@ function getTaskTitleEl(section) {
   return section.querySelector(".task-detail-title");
 }
 
-function renderTaskSteps(task) {
+function renderTaskSteps(task, taskId) {
   const taskSteps = getTaskStepsEl(currentSection);
   taskSteps.innerHTML = "";
   task.systems.forEach((sys) => {
@@ -321,6 +352,13 @@ function renderTaskSteps(task) {
 
     taskSteps.appendChild(videoWrap);
   }
+
+  // 「傳送我的位置」任務：加上定位分享卡片
+  if (taskId === "location") {
+    const locationCard = createLocationCard();
+    taskSteps.appendChild(locationCard);
+    wireLocationCard(locationCard);
+  }
 }
 
 taskButtons.forEach((btn) => {
@@ -335,7 +373,7 @@ taskButtons.forEach((btn) => {
 
     getTaskIconEl(currentSection).textContent = task.icon;
     getTaskTitleEl(currentSection).textContent = task.title;
-    renderTaskSteps(task);
+    renderTaskSteps(task, taskId);
 
     taskButtons.forEach((b) => {
       b.setAttribute("aria-pressed", String(b === btn));
@@ -423,5 +461,246 @@ toggleToTop();
 if (toTopBtn) {
   toTopBtn.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}
+
+/* ============================================================
+   傳送我的位置：取得 GPS 座標，產生地圖連結並分享
+   ============================================================ */
+
+// 建立定位分享卡片（只有「傳送我的位置」任務才會用到）
+function createLocationCard() {
+  const card = document.createElement("div");
+  card.className = "location-card";
+  card.innerHTML = `
+    <h3 class="location-title">📍 傳送我的位置給家人</h3>
+    <p class="location-lead">出門在外，按一下下面的按鈕，就能把您現在的位置傳給家人。</p>
+
+    <button type="button" class="location-btn" id="locationBtn" aria-busy="false">
+      <span class="location-btn-icon" aria-hidden="true">📍</span>
+      <span id="locationBtnText">取得我的位置</span>
+    </button>
+
+    <p class="location-status" id="locationStatus" role="status" aria-live="polite"></p>
+
+    <div class="location-result" id="locationResult" hidden>
+      <p class="location-address" id="locationAddress">已經找到您的位置</p>
+      <p class="location-coords" id="locationCoords"></p>
+      <p class="location-accuracy" id="locationAccuracy"></p>
+      <p class="location-time" id="locationTime"></p>
+
+      <a class="location-map-link" id="locationMapLink" href="#" target="_blank" rel="noopener">
+        🗺️ 在地圖上看我的位置
+      </a>
+
+      <div class="location-actions">
+        <button type="button" class="location-action location-action-primary" id="locationShareBtn">
+          📤 分享給家人
+        </button>
+        <button type="button" class="location-action" id="locationCopyBtn">
+          📋 複製位置連結
+        </button>
+        <a class="location-action" id="locationSmsLink" href="#">
+          💬 用簡訊傳送
+        </a>
+      </div>
+
+      <p class="location-tip">小提醒：傳送前，請先確認是要傳給認識的家人。</p>
+    </div>
+  `;
+  return card;
+}
+
+// 把定位卡片的按鈕接上功能
+function wireLocationCard(card) {
+  const $ = (id) => card.querySelector("#" + id);
+
+  const btn = $("locationBtn");
+  const btnText = $("locationBtnText");
+  const status = $("locationStatus");
+  const result = $("locationResult");
+  const address = $("locationAddress");
+  const coords = $("locationCoords");
+  const accuracy = $("locationAccuracy");
+  const timeEl = $("locationTime");
+  const mapLink = $("locationMapLink");
+  const shareBtn = $("locationShareBtn");
+  const copyBtn = $("locationCopyBtn");
+  const smsLink = $("locationSmsLink");
+
+  let lastLocation = null;
+  let isLocating = false;
+
+  function setStatus(text, type) {
+    status.textContent = text;
+    status.classList.remove("is-error", "is-ok");
+    if (type) status.classList.add("is-" + type);
+  }
+
+  function buildMessage(loc) {
+    return (
+      "我現在的位置：\n" +
+      loc.mapUrl +
+      "\n（座標 " + loc.coordsText + "，時間 " + loc.timeText + "）"
+    );
+  }
+
+  function buildSmsHref(message) {
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    return "sms:" + (isIOS ? "&" : "?") + "body=" + encodeURIComponent(message);
+  }
+
+  function renderPosition(position) {
+    const lat = position.coords.latitude;
+    const lng = position.coords.longitude;
+    const acc = Math.round(position.coords.accuracy || 0);
+    const coordsText = lat.toFixed(6) + ", " + lng.toFixed(6);
+    const mapUrl = "https://www.google.com/maps?q=" + lat.toFixed(6) + "," + lng.toFixed(6);
+    const timeText = new Date().toLocaleString("zh-TW", { hour12: false });
+
+    lastLocation = {
+      lat: lat,
+      lng: lng,
+      accuracy: acc,
+      coordsText: coordsText,
+      mapUrl: mapUrl,
+      timeText: timeText,
+    };
+    lastLocation.message = buildMessage(lastLocation);
+
+    address.textContent = "✅ 已經找到您的位置";
+    coords.textContent = "緯度 " + lat.toFixed(6) + "　經度 " + lng.toFixed(6);
+    accuracy.textContent =
+      acc > 0
+        ? "定位誤差大約 " + acc + " 公尺" + (acc > 200 ? "（室內或收訊較弱時，位置會比較不準）" : "")
+        : "";
+    timeEl.textContent = "更新時間：" + timeText;
+    mapLink.href = mapUrl;
+    smsLink.href = buildSmsHref(lastLocation.message);
+
+    result.hidden = false;
+    btnText.textContent = "🔄 重新取得位置";
+    setStatus("位置已取得，可以按下面的按鈕傳給家人。", "ok");
+  }
+
+  function errorMessage(err) {
+    if (!err) return "取得位置時發生問題，請再按一次。";
+    if (err.code === 1) return "沒有取得定位權限。請在瀏覽器網址列旁允許「位置」，再按一次按鈕。";
+    if (err.code === 2) return "目前找不到定位訊號。請到窗邊或空曠處，再按一次按鈕。";
+    if (err.code === 3) return "等太久沒有收到位置。請再按一次按鈕。";
+    return "取得位置時發生問題，請再按一次。";
+  }
+
+  function getMyLocation() {
+    if (isLocating) return;
+
+    if (!navigator.geolocation) {
+      setStatus("這個瀏覽器不支援定位功能，請改用 Safari、Chrome 或 Edge。", "error");
+      return;
+    }
+
+    if (!window.isSecureContext) {
+      setStatus(
+        "定位功能需要 HTTPS 網址。用 Cloudflare Pages 的網址就沒問題；本機測試請用 http://localhost。",
+        "error"
+      );
+      return;
+    }
+
+    isLocating = true;
+    btn.disabled = true;
+    btn.setAttribute("aria-busy", "true");
+    btnText.textContent = "正在找您的位置…";
+    setStatus("正在透過 GPS 找位置，請稍等（最多 20 秒）。");
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        isLocating = false;
+        btn.disabled = false;
+        btn.setAttribute("aria-busy", "false");
+        renderPosition(position);
+      },
+      (err) => {
+        isLocating = false;
+        btn.disabled = false;
+        btn.setAttribute("aria-busy", "false");
+        btnText.textContent = lastLocation ? "🔄 重新取得位置" : "📍 再試一次";
+        setStatus(
+          lastLocation
+            ? errorMessage(err) + " 下面顯示的是上一次取得的位置（" + lastLocation.timeText + "）。"
+            : errorMessage(err),
+          "error"
+        );
+      },
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
+    );
+  }
+
+  async function copyText() {
+    if (!lastLocation) return false;
+    const text = lastLocation.message;
+
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch (e) {
+      /* 改用下面的舊方法 */
+    }
+
+    try {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.top = "-1000px";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(textarea);
+      return ok;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async function shareLocation() {
+    if (!lastLocation) {
+      setStatus("請先按「取得我的位置」。", "error");
+      return;
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "我的位置",
+          text: lastLocation.message,
+        });
+        setStatus("已開啟分享選單，請選擇要傳給哪位家人。", "ok");
+        return;
+      } catch (err) {
+        if (err && err.name === "AbortError") return;
+      }
+    }
+
+    const copied = await copyText();
+    setStatus(
+      copied
+        ? "這個瀏覽器沒有分享選單，位置連結已複製，請貼到訊息裡傳給家人。"
+        : "無法自動分享，請按「在地圖上看」後，複製網址傳給家人。",
+      copied ? "ok" : "error"
+    );
+  }
+
+  btn.addEventListener("click", getMyLocation);
+  shareBtn.addEventListener("click", shareLocation);
+  copyBtn.addEventListener("click", async () => {
+    const ok = await copyText();
+    setStatus(
+      ok ? "位置資訊已複製！請貼到訊息裡傳給家人。" : "複製失敗，請按「在地圖上看」後複製網址。",
+      ok ? "ok" : "error"
+    );
   });
 }

@@ -101,12 +101,12 @@ const tasks = {
         name: "蘋果手機（iPhone）",
         icon: "🍎",
         steps: [
-          "用 Safari 打開這個網站。",
-          "按一下藍色大按鈕「取得我的位置」。",
-          "看到詢問時，按「允許」。",
-          "等幾秒鐘，畫面會顯示您的位置。",
-          "要看地圖，可以按「Google 地圖」或「Apple 地圖」。",
-          "要傳給家人，按「分享給家人」或「用 LINE 傳送」，選擇要傳給的家人。",
+          "打開手機上的「地圖」app（Apple 地圖）。",
+          "點一下地圖上的藍色圓點，那就是您現在的位置。",
+          "點一下下方的「分享」按鈕。",
+          "選擇「訊息」或「LINE」。",
+          "選一位家人，按「傳送」。",
+          "如果還是不會，畫面下方有按鈕，可以幫您把位置傳給家人。",
         ],
       },
       {
@@ -114,12 +114,12 @@ const tasks = {
         name: "安卓手機（Android）",
         icon: "🤖",
         steps: [
-          "用 Chrome 打開這個網站。",
-          "按一下藍色大按鈕「取得我的位置」。",
-          "看到詢問時，按「允許」。",
-          "等幾秒鐘，畫面會顯示您的位置。",
-          "要看地圖，可以按「Google 地圖」或「Apple 地圖」。",
-          "要傳給家人，按「分享給家人」或「用 LINE 傳送」，選擇要傳給的家人。",
+          "打開手機上的「Google 地圖」app。",
+          "點一下地圖上的藍色圓點，那就是您現在的位置。",
+          "點一下「分享位置資訊」。",
+          "選擇「訊息」或「LINE」。",
+          "選一位家人，按「傳送」。",
+          "如果還是不會，畫面下方有按鈕，可以幫您把位置傳給家人。",
         ],
       },
     ],
@@ -476,7 +476,7 @@ function createLocationCard() {
   card.className = "location-card";
   card.innerHTML = `
     <h3 class="location-title">📍 傳送我的位置給家人</h3>
-    <p class="location-lead">出門在外，如果您不知道自己在哪裡，或不會傳位置，按一下下面的按鈕，就能用 Google 地圖或 Apple 地圖把位置傳給家人。</p>
+    <p class="location-lead">上面的步驟是教您用 Apple 地圖（iPhone）或 Google 地圖（Android）傳位置。如果真的不會操作，再按下面的按鈕，這個網站會幫您把位置變成連結，一樣可以傳給家人。</p>
 
     <button type="button" class="location-btn" id="locationBtn" aria-busy="false">
       <span class="location-btn-icon" aria-hidden="true">📍</span>

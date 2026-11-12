@@ -6,7 +6,7 @@
 
 - **手機**：支援蘋果手機（iPhone）與安卓手機（Android）
   - 打電話給家人、傳訊息給家人、拍照
-  - 傳送我的位置給家人（取得 GPS、開啟地圖、分享／複製／簡訊傳送）
+  - 傳送我的位置給家人（取得 GPS、開啟地圖、分享／複製／LINE／簡訊傳送）
 - **電腦**：支援 Windows 與 Mac
   - 開啟網頁、截圖、調整字體大小
 - **智慧手錶**：支援 Apple Watch 與安卓手錶（Wear OS）
@@ -19,14 +19,29 @@
 - 字級切換：Ａ小 / Ａ中 / Ａ大（預設大，localStorage 會記住上次選擇）
 - 每一步都有大數字編號
 
-## 執行方式
+## 開啟方式
+
+### 線上使用（GitHub Pages）
+
+直接用手機、電腦或平板的瀏覽器打開：
+
+**https://chang036.github.io/Simplified-3C-Product-Manual/**
+
+不需要安裝任何東西，電腦關機也能使用。
+
+這個網站已設定自動部署：之後只要把修改推送到 `main` 分支，GitHub Actions 就會自動更新線上版本。
+
+### 本機預覽（開發用）
+
+如果想先在自己的電腦上看修改結果：
 
 ```bash
-cd projects/simple-device-guide
 python -m http.server 8765
 ```
 
-然後開啟 http://localhost:8765
+然後開啟 <http://localhost:8765/>。
+
+> 提醒：定位分享功能需要 HTTPS 或 localhost 才能運作。用區網 IP（例如 `http://192.168.1.x:8765`）開啟時，瀏覽器會阻擋定位。
 
 ## 如何自行新增項目與示意影片
 

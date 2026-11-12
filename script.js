@@ -105,7 +105,8 @@ const tasks = {
           "按一下藍色大按鈕「取得我的位置」。",
           "看到詢問時，按「允許」。",
           "等幾秒鐘，畫面會顯示您的位置。",
-          "按「分享給家人」或「用 LINE 傳送」，選擇要傳給的家人。",
+          "要看地圖，可以按「Google 地圖」或「Apple 地圖」。",
+          "要傳給家人，按「分享給家人」或「用 LINE 傳送」，選擇要傳給的家人。",
         ],
       },
       {
@@ -117,7 +118,8 @@ const tasks = {
           "按一下藍色大按鈕「取得我的位置」。",
           "看到詢問時，按「允許」。",
           "等幾秒鐘，畫面會顯示您的位置。",
-          "按「分享給家人」或「用 LINE 傳送」，選擇要傳給的家人。",
+          "要看地圖，可以按「Google 地圖」或「Apple 地圖」。",
+          "要傳給家人，按「分享給家人」或「用 LINE 傳送」，選擇要傳給的家人。",
         ],
       },
     ],
@@ -474,7 +476,7 @@ function createLocationCard() {
   card.className = "location-card";
   card.innerHTML = `
     <h3 class="location-title">📍 傳送我的位置給家人</h3>
-    <p class="location-lead">出門在外，按一下下面的按鈕，就能把您現在的位置傳給家人。</p>
+    <p class="location-lead">出門在外，如果您不知道自己在哪裡，或不會傳位置，按一下下面的按鈕，就能用 Google 地圖或 Apple 地圖把位置傳給家人。</p>
 
     <button type="button" class="location-btn" id="locationBtn" aria-busy="false">
       <span class="location-btn-icon" aria-hidden="true">📍</span>
@@ -489,9 +491,14 @@ function createLocationCard() {
       <p class="location-accuracy" id="locationAccuracy"></p>
       <p class="location-time" id="locationTime"></p>
 
-      <a class="location-map-link" id="locationMapLink" href="#" target="_blank" rel="noopener">
-        🗺️ 在地圖上看我的位置
-      </a>
+      <div class="location-map-links">
+        <a class="location-map-link" id="locationGoogleMapLink" href="#" target="_blank" rel="noopener">
+          🗺️ 在 Google 地圖看
+        </a>
+        <a class="location-map-link" id="locationAppleMapLink" href="#" target="_blank" rel="noopener">
+          🍎 在 Apple 地圖看
+        </a>
+      </div>
 
       <div class="location-actions">
         <button type="button" class="location-action location-action-primary" id="locationShareBtn">
@@ -526,7 +533,8 @@ function wireLocationCard(card) {
   const coords = $("locationCoords");
   const accuracy = $("locationAccuracy");
   const timeEl = $("locationTime");
-  const mapLink = $("locationMapLink");
+  const googleMapLink = $("locationGoogleMapLink");
+  const appleMapLink = $("locationAppleMapLink");
   const shareBtn = $("locationShareBtn");
   const copyBtn = $("locationCopyBtn");
   const lineLink = $("locationLineLink");
@@ -544,8 +552,9 @@ function wireLocationCard(card) {
   function buildMessage(loc) {
     return (
       "我現在的位置：\n" +
-      loc.mapUrl +
-      "\n（座標 " + loc.coordsText + "，時間 " + loc.timeText + "）"
+      "Google 地圖：" + loc.googleMapUrl + "\n" +
+      "Apple 地圖：" + loc.appleMapUrl + "\n" +
+      "（座標 " + loc.coordsText + "，時間 " + loc.timeText + "）"
     );
   }
 
@@ -564,7 +573,8 @@ function wireLocationCard(card) {
     const lng = position.coords.longitude;
     const acc = Math.round(position.coords.accuracy || 0);
     const coordsText = lat.toFixed(6) + ", " + lng.toFixed(6);
-    const mapUrl = "https://www.google.com/maps?q=" + lat.toFixed(6) + "," + lng.toFixed(6);
+    const googleMapUrl = "https://www.google.com/maps?q=" + lat.toFixed(6) + "," + lng.toFixed(6);
+    const appleMapUrl = "https://maps.apple.com/?q=" + lat.toFixed(6) + "," + lng.toFixed(6);
     const timeText = new Date().toLocaleString("zh-TW", { hour12: false });
 
     lastLocation = {
@@ -572,7 +582,8 @@ function wireLocationCard(card) {
       lng: lng,
       accuracy: acc,
       coordsText: coordsText,
-      mapUrl: mapUrl,
+      googleMapUrl: googleMapUrl,
+      appleMapUrl: appleMapUrl,
       timeText: timeText,
     };
     lastLocation.message = buildMessage(lastLocation);
@@ -584,7 +595,8 @@ function wireLocationCard(card) {
         ? "定位誤差大約 " + acc + " 公尺" + (acc > 200 ? "（室內或收訊較弱時，位置會比較不準）" : "")
         : "";
     timeEl.textContent = "更新時間：" + timeText;
-    mapLink.href = mapUrl;
+    googleMapLink.href = googleMapUrl;
+    appleMapLink.href = appleMapUrl;
     smsLink.href = buildSmsHref(lastLocation.message);
     lineLink.href = buildLineHref(lastLocation.message);
 
@@ -611,7 +623,7 @@ function wireLocationCard(card) {
 
     if (!window.isSecureContext) {
       setStatus(
-        "定位功能需要 HTTPS 網址。用 Cloudflare Pages 的網址就沒問題；本機測試請用 http://localhost。",
+        "定位功能需要 HTTPS 網址。請用 GitHub Pages 的網址開啟；本機測試請用 http://localhost。",
         "error"
       );
       return;
@@ -699,7 +711,7 @@ function wireLocationCard(card) {
     setStatus(
       copied
         ? "這個瀏覽器沒有分享選單，位置連結已複製，請貼到訊息裡傳給家人。"
-        : "無法自動分享，請按「在地圖上看」後，複製網址傳給家人。",
+        : "無法自動分享，請按「在 Google 地圖看」或「在 Apple 地圖看」後，複製網址傳給家人。",
       copied ? "ok" : "error"
     );
   }

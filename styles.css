@@ -471,8 +471,14 @@ h1 {
   background: #f0f0f0;
 }
 
-.location-map-link {
+.location-map-links {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
   margin-bottom: 1rem;
+}
+
+.location-map-link {
   background: #111111;
   color: #ffffff;
 }
@@ -515,6 +521,10 @@ h1 {
 
 @media (min-width: 700px) {
   .location-actions {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .location-map-links {
     grid-template-columns: repeat(2, 1fr);
   }
 }

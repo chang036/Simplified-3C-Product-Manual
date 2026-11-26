@@ -187,6 +187,12 @@ h1 {
   border-top: 4px solid #111111;
 }
 
+/* 在按鈕格線中展開時，佔滿整行，緊接在點選的按鈕下方 */
+.task-grid > .task-detail {
+  grid-column: 1 / -1;
+  margin-top: 0;
+}
+
 .task-detail[hidden] {
   display: none;
 }

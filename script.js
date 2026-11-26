@@ -826,6 +826,10 @@ taskButtons.forEach((btn) => {
     currentSection = btn.closest(".category-section");
     if (!currentSection) return;
 
+    // 把教學內容移到點選的按鈕正下方展開（而不是整排按鈕的最下面）
+    const detail = currentSection.querySelector(".task-detail");
+    if (detail) btn.after(detail);
+
     getTaskIconEl(currentSection).textContent = task.icon;
     getTaskTitleEl(currentSection).textContent = task.title;
     renderTaskSteps(task, taskId);

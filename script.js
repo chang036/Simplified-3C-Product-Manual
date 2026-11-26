@@ -1,1162 +1,1150 @@
 "use strict";
 
 /* ============================================================
-   任務資料：每個任務包含要做的事情、要用的系統，以及簡單的步驟
+   安心操作助理
+   ------------------------------------------------------------
+   1. 快速求助：家人的一鍵撥號 / 簡訊、緊急電話
+   2. 教學分類：手機、電腦、智慧手錶、安心求助
+   3. 一步一步模式：大字、語音朗讀、上一步 / 下一步
+   4. 裝置自動判斷、字級記憶、離線使用（PWA）
    ============================================================ */
-const tasks = {
-  call: {
-    category: "phone",
-    icon: "📞",
-    title: "打電話給家人",
-    video: null,
-    systems: [
-      {
-        id: "ios",
-        name: "蘋果手機（iPhone）",
-        icon: "🍎",
-        steps: [
-          "找出「電話」app，圖示是綠色的。",
-          "打開它。",
-          "在上面輸入家人的電話號碼。",
-          "按一下綠色的大按鈕「回呼」。",
-          "接電話時，要掛斷請按紅色按鈕。",
-        ],
-      },
-      {
-        id: "android",
-        name: "安卓手機（Android）",
-        icon: "🤖",
-        steps: [
-          "找到「電話」app，圖示是綠色電話。",
-          "輸入號碼，或點選家人名字。",
-          "按綠色電話按鈕開始通話。",
-          "接電話時，按紅色掛斷按鈕。",
-        ],
-      },
-    ],
-  },
-  message: {
-    category: "phone",
-    icon: "💬",
-    title: "傳訊息給家人",
-    systems: [
-      {
-        id: "ios",
-        name: "蘋果手機（iPhone）",
-        icon: "🍎",
-        steps: [
-          "打開「訊息」app，圖示是藍色對話框。",
-          "輸入家人號碼或名字。",
-          "按「寄出」。",
-          "確認訊息已經送給家人。",
-        ],
-      },
-      {
-        id: "android",
-        name: "安卓手機（Android）",
-        icon: "🤖",
-        steps: [
-          "打開「訊息」app。",
-          "輸入號碼，或選擇家人。",
-          "按「送出」。",
-          "確認訊息已經送出。",
-        ],
-      },
-    ],
-  },
-  photo: {
-    category: "phone",
-    icon: "📷",
-    title: "拍照",
-    systems: [
-      {
-        id: "ios",
-        name: "蘋果手機（iPhone）",
-        icon: "🍎",
-        steps: [
-          "打開「相機」app，圖示是灰色相機。",
-          "打開後，按一下白色快門。",
-          "照片會存到相簿。",
-        ],
-      },
-      {
-        id: "android",
-        name: "安卓手機（Android）",
-        icon: "🤖",
-        steps: [
-          "打開「相機」app。",
-          "按快門鈕拍照。",
-          "照片會存到相簿。",
-        ],
-      },
-    ],
-  },
-  location: {
-    category: "phone",
-    icon: "📍",
-    title: "傳送我的位置給家人",
-    systems: [
-      {
-        id: "ios",
-        name: "蘋果手機（iPhone）",
-        icon: "🍎",
-        steps: [
-          "打開手機上的「地圖」app（Apple 地圖）。",
-          "點一下地圖上的藍色圓點，那就是您現在的位置。",
-          "點一下下方的「分享」按鈕。",
-          "選擇「訊息」或「LINE」。",
-          "選一位家人，按「傳送」。",
-          "如果還是不會，畫面下方有按鈕，可以幫您把位置傳給家人。",
-        ],
-      },
-      {
-        id: "android",
-        name: "安卓手機（Android）",
-        icon: "🤖",
-        steps: [
-          "打開手機上的「Google 地圖」app。",
-          "點一下地圖上的藍色圓點，那就是您現在的位置。",
-          "點一下「分享位置資訊」。",
-          "選擇「訊息」或「LINE」。",
-          "選一位家人，按「傳送」。",
-          "如果還是不會，畫面下方有按鈕，可以幫您把位置傳給家人。",
-        ],
-      },
-    ],
-  },
-  wifi: {
-    category: "phone",
-    icon: "📶",
-    title: "連 Wi-Fi / 忘記 Wi-Fi 密碼怎麼辦",
-    systems: [
-      {
-        id: "ios",
-        name: "蘋果手機（iPhone）",
-        icon: "🍎",
-        steps: [
-          "打開「設定」app（齒輪圖示）。",
-          "點一下「Wi-Fi」，把開關打開。",
-          "點一下家裡的 Wi-Fi 名稱。",
-          "輸入密碼，按「加入」，出現打勾就成功了。",
-          "忘記密碼時：先看數據機背面的貼紙，或問家人。",
-          "一直連不上時，點 Wi-Fi 名稱旁的 ⓘ →「忘記此網路」，再重新輸入密碼。",
-        ],
-      },
-      {
-        id: "android",
-        name: "安卓手機（Android）",
-        icon: "🤖",
-        steps: [
-          "打開「設定」app。",
-          "點「網路和網際網路」→「Wi-Fi」，把開關打開。",
-          "點一下家裡的 Wi-Fi 名稱。",
-          "輸入密碼，按「連線」。",
-          "忘記密碼時：看數據機背面的貼紙，或問家人。",
-          "一直連不上時，長按 Wi-Fi 名稱 →「忘記網路」，再重新輸入密碼。",
-        ],
-      },
-    ],
-  },
-  bluetooth: {
-    category: "phone",
-    icon: "🔵",
-    title: "連藍牙",
-    systems: [
-      {
-        id: "ios",
-        name: "蘋果手機（iPhone）",
-        icon: "🍎",
-        steps: [
-          "打開「設定」app。",
-          "點一下「藍牙」，把開關打開（變成綠色）。",
-          "打開耳機或喇叭，讓它進入配對模式（指示燈會閃爍）。",
-          "在「我的裝置」下面，點一下耳機或喇叭的名稱。",
-          "出現「已連線」就成功了，可以播放音樂試聽。",
-          "第一次連好後，下次打開通常會自動連上。",
-        ],
-      },
-      {
-        id: "android",
-        name: "安卓手機（Android）",
-        icon: "🤖",
-        steps: [
-          "從螢幕上方往下滑，點一下「藍牙」圖示。",
-          "如果找不到，到「設定」→「連線」→「藍牙」，把開關打開。",
-          "打開耳機或喇叭，讓它進入配對模式（指示燈會閃爍）。",
-          "在「配對新裝置」下面，點一下耳機或喇叭的名稱。",
-          "出現「已連線」就成功了，可以播放音樂試聽。",
-          "連不上時，先取消配對再試一次，或請家人幫忙。",
-        ],
-      },
-    ],
-  },
-  phone_screenshot: {
-    category: "phone",
-    icon: "📸",
-    title: "手機截圖",
-    systems: [
-      {
-        id: "ios",
-        name: "蘋果手機（iPhone）",
-        icon: "🍎",
-        steps: [
-          "同時按一下側邊鍵和音量加大鍵。",
-          "如果是舊款 iPhone（有圓形 Home 鍵），按 Home 鍵和側邊鍵。",
-          "聽到快門聲或看到畫面閃一下，就成功了。",
-          "到「照片」app →「相簿」→「螢幕截圖」可以查看。",
-        ],
-      },
-      {
-        id: "android",
-        name: "安卓手機（Android）",
-        icon: "🤖",
-        steps: [
-          "同時按住電源鍵和音量減小鍵。",
-          "看到畫面閃一下就成功了。",
-          "如果沒反應，從螢幕上方往下滑，點「截圖」。",
-          "到「相簿」→「截圖」資料夾可以查看。",
-        ],
-      },
-    ],
-  },
-  storage: {
-    category: "phone",
-    icon: "🧹",
-    title: "清理空間",
-    systems: [
-      {
-        id: "ios",
-        name: "蘋果手機（iPhone）",
-        icon: "🍎",
-        steps: [
-          "打開「設定」→「一般」→「iPhone 儲存空間」。",
-          "等一會兒，看看哪個 app 佔最多空間。",
-          "點很少用的 app →「卸載 app」或「刪除 app」。",
-          "打開「照片」app，選不要的照片，按垃圾桶刪除。",
-          "到「照片」→「相簿」→「最近刪除」，按「全部刪除」才會真的清掉。",
-          "刪之前先確認照片已備份，才不會後悔。",
-        ],
-      },
-      {
-        id: "android",
-        name: "安卓手機（Android）",
-        icon: "🤖",
-        steps: [
-          "打開「設定」→「儲存空間」。",
-          "看看哪一項佔最多空間。",
-          "點那個 app →「清除快取」；不用的 app 按「卸載」。",
-          "打開「相簿」，選不要的照片，按垃圾桶刪除。",
-          "到「資源回收桶」按「清空」，空間才會真正空出來。",
-          "刪之前先確認照片已備份，才不會後悔。",
-        ],
-      },
-    ],
-  },
-  find_phone: {
-    category: "phone",
-    icon: "🔎",
-    title: "找回不見的手機",
-    systems: [
-      {
-        id: "ios",
-        name: "蘋果手機（iPhone）",
-        icon: "🍎",
-        steps: [
-          "跟家人借手機或電腦，打開瀏覽器到 icloud.com/find。",
-          "輸入自己的 Apple 帳號和密碼。",
-          "點「尋找我的 iPhone」，選不見的手機。",
-          "點「播放聲音」，手機會響，順著聲音找。",
-          "如果不在附近，點「標記為遺失」，手機會鎖住。",
-          "如果手機沒電或沒網路，只能看到最後一次的位置。",
-        ],
-      },
-      {
-        id: "android",
-        name: "安卓手機（Android）",
-        icon: "🤖",
-        steps: [
-          "跟家人借手機或電腦，打開瀏覽器到 google.com/android/find。",
-          "登入自己的 Google 帳號。",
-          "選不見的手機。",
-          "點「播放聲音」，手機會響，順著聲音找。",
-          "點「保護裝置」或「遺失模式」，可以先鎖住手機。",
-          "如果手機沒電或沒網路，只能看到最後一次的位置。",
-        ],
-      },
-    ],
-  },
-  mobile_pay: {
-    category: "phone",
-    icon: "💳",
-    title: "行動支付（Apple Pay、Google Pay 等）",
-    systems: [
-      {
-        id: "ios",
-        name: "蘋果手機（iPhone）",
-        icon: "🍎",
-        steps: [
-          "打開「錢包」app，點右上角的「＋」。",
-          "選「信用卡或金融卡」，照指示加入卡片。",
-          "在店家看到 Apple Pay 標誌時，連按兩下側邊鍵。",
-          "把手機上方靠近感應區，聽到「嗶」就成功了。",
-          "也可以用台灣 Pay：打開 app → 選銀行 → 掃描 QR Code 付款。",
-          "小提醒：不管誰打電話問驗證碼，都不要說出來。",
-        ],
-      },
-      {
-        id: "android",
-        name: "安卓手機（Android）",
-        icon: "🤖",
-        steps: [
-          "打開「Google 錢包」（Google Pay）app，點「加入」。",
-          "照指示加入信用卡或金融卡。",
-          "看到感應付款標誌時，解鎖手機，把背面靠近感應區。",
-          "三星手機可用 Samsung Pay：加入卡片後，從下方往上滑選卡片再感應。",
-          "台灣 Pay：打開 app → 選銀行 → 掃 QR Code 或出示條碼。",
-          "小提醒：不管誰打電話問驗證碼，都不要說出來。",
-        ],
-      },
-    ],
-  },
-  browse: {
-    category: "computer",
-    icon: "🌐",
-    title: "開啟網頁",
-    systems: [
-      {
-        id: "windows",
-        name: "Windows 電腦",
-        icon: "🪟",
-        steps: [
-          "找到桌上「瀏覽器」圖示，例如 Microsoft Edge。",
-          "用滑鼠雙重按一下它。",
-          "在網址列貼上網址。",
-          "按一下 Enter 鍵。",
-        ],
-      },
-      {
-        id: "mac",
-        name: "Mac 電腦",
-        icon: "🍎",
-        steps: [
-          "找「Safari」或「Chrome」圖示。",
-          "用兩倍滑鼠點兩下它。",
-          "貼上網址。",
-          "按 Enter 鍵。",
-        ],
-      },
-    ],
-  },
-  screenshot: {
-    category: "computer",
-    icon: "📸",
-    title: "截圖",
-    systems: [
-      {
-        id: "windows",
-        name: "Windows 電腦",
-        icon: "🪟",
-        steps: [
-          "按一下 Windows 鍵，再按 Shift 和 S。",
-          "用滑鼠畫一個框。",
-          "照片會存到剪貼簿。",
-        ],
-      },
-      {
-        id: "mac",
-        name: "Mac 電腦",
-        icon: "🍎",
-        steps: [
-          "按 Command 鍵加 Shift 加 3。",
-          "照片會存到桌面。",
-        ],
-      },
-    ],
-  },
-  fontsize: {
-    category: "computer",
-    icon: "🔍",
-    title: "調整字體大小",
-    systems: [
-      {
-        id: "windows",
-        name: "Windows 電腦",
-        icon: "🪟",
-        steps: [
-          "按一下 Windows 鍵，打開設定。",
-          "點「個性化」。",
-          "點「顯示」。",
-          "調整字級別。",
-        ],
-      },
-      {
-        id: "mac",
-        name: "Mac 電腦",
-        icon: "🍎",
-        steps: [
-          "開啟「系統設定」。",
-          "點「顯示」。",
-          "調整文字大小。",
-        ],
-      },
-    ],
-  },
-  computer_wifi: {
-    category: "computer",
-    icon: "📶",
-    title: "連 Wi-Fi",
-    systems: [
-      {
-        id: "windows",
-        name: "Windows 電腦",
-        icon: "🪟",
-        steps: [
-          "按一下工作列右下角的網路圖示（像無線電波）。",
-          "點一下家裡 Wi-Fi 的名稱。",
-          "輸入密碼，按「連線」。",
-          "出現「已連線」就可以上網了。",
-          "忘記密碼時：看數據機背面的貼紙，或問家人。",
-          "一直連不上時，點「忘記此網路」，再重新輸入密碼。",
-        ],
-      },
-      {
-        id: "mac",
-        name: "Mac 電腦",
-        icon: "🍎",
-        steps: [
-          "點一下畫面右上角的 Wi-Fi 圖示（扇形）。",
-          "打開 Wi-Fi，點家裡的網路名稱。",
-          "輸入密碼，按「加入」。",
-          "圖示變成實心扇形就連上了。",
-          "忘記密碼時：看數據機背面的貼紙，或問家人。",
-          "一直連不上時，選「忘記此網路」，再重新輸入密碼。",
-        ],
-      },
-    ],
-  },
-  computer_bluetooth: {
-    category: "computer",
-    icon: "🔵",
-    title: "連藍牙",
-    systems: [
-      {
-        id: "windows",
-        name: "Windows 電腦",
-        icon: "🪟",
-        steps: [
-          "按 Windows 鍵加 I，打開設定。",
-          "點「藍牙與裝置」（舊版叫「裝置」）。",
-          "把藍牙開關打開。",
-          "打開耳機或喇叭，讓它進入配對模式（指示燈會閃）。",
-          "點「新增裝置」→「藍牙」，選裝置名稱。",
-          "出現「已連線」就成功了。",
-        ],
-      },
-      {
-        id: "mac",
-        name: "Mac 電腦",
-        icon: "🍎",
-        steps: [
-          "點左上角蘋果 →「系統設定」→「藍牙」。",
-          "把藍牙開關打開。",
-          "讓耳機或喇叭進入配對模式（指示燈會閃）。",
-          "在裝置清單點一下名稱，按「連線」。",
-          "出現「已連線」就成功了。",
-        ],
-      },
-    ],
-  },
-  computer_search: {
-    category: "computer",
-    icon: "🔎",
-    title: "用搜尋找東西",
-    systems: [
-      {
-        id: "windows",
-        name: "Windows 電腦",
-        icon: "🪟",
-        steps: [
-          "按一下鍵盤上的 Windows 鍵（畫著窗戶那顆）。",
-          "直接打字，例如「計算機」或「天氣」。",
-          "點一下出現的結果，就會打開。",
-          "想找檔案，也可以直接輸入檔案名稱。",
-        ],
-      },
-      {
-        id: "mac",
-        name: "Mac 電腦",
-        icon: "🍎",
-        steps: [
-          "按 Command 鍵加空白鍵，會出現放大鏡。",
-          "直接打字，例如「計算機」。",
-          "點一下結果，就會打開。",
-          "也可以點畫面右上角的放大鏡圖示搜尋。",
-        ],
-      },
-    ],
-  },
-  computer_phishing: {
-    category: "computer",
-    icon: "⚠️",
-    title: "辨識詭異信件",
-    systems: [
-      {
-        id: "windows",
-        name: "Windows 電腦",
-        icon: "🪟",
-        steps: [
-          "收到「包裹未領」「帳號被盜」「中獎」的信，先不要點裡面的連結。",
-          "把滑鼠停在連結上（不要按），看看網址是不是很奇怪。",
-          "不要回信，也不要輸入密碼或驗證碼。",
-          "按「檢舉為垃圾郵件」或直接刪除。",
-          "如果已經點了或輸入資料，請立刻改密碼。",
-          "拿不定主意時，撥 165 查證或問家人。",
-        ],
-      },
-      {
-        id: "mac",
-        name: "Mac 電腦",
-        icon: "🍎",
-        steps: [
-          "收到「包裹未領」「帳號被盜」「中獎」的信，先不要點裡面的連結。",
-          "把滑鼠停在連結上（不要按），看看網址是不是很奇怪。",
-          "不要回信，也不要輸入密碼或驗證碼。",
-          "按「垃圾郵件」或直接刪除。",
-          "如果已經點了或輸入資料，請立刻改密碼。",
-          "拿不定主意時，撥 165 查證或問家人。",
-        ],
-      },
-    ],
-  },
-  computer_ime: {
-    category: "computer",
-    icon: "🔤",
-    title: "中文輸入切換",
-    systems: [
-      {
-        id: "windows",
-        name: "Windows 電腦",
-        icon: "🪟",
-        steps: [
-          "看一下工作列右下角，現在是「中」還是「英」。",
-          "點一下它，選「中文（注音）」就可以打注音符號。",
-          "也可以用快捷鍵 Shift 加 Alt 切換中英文。",
-          "想打英文時，切到「英」再打字。",
-          "打錯時，按 Backspace 鍵刪除。",
-        ],
-      },
-      {
-        id: "mac",
-        name: "Mac 電腦",
-        icon: "🍎",
-        steps: [
-          "點一下畫面右上角的輸入法圖示（例如「A」或「注」）。",
-          "選「注音」就可以打注音符號。",
-          "按 Control 加空白鍵，也可以更換輸入法。",
-          "想打英文時，選「ABC」。",
-          "打錯時，按 Delete 鍵刪除。",
-        ],
-      },
-    ],
-  },
-  computer_resolution: {
-    category: "computer",
-    icon: "🔠",
-    title: "調整解析度讓字更大",
-    systems: [
-      {
-        id: "windows",
-        name: "Windows 電腦",
-        icon: "🪟",
-        steps: [
-          "在桌面空白處按一下滑鼠右鍵，點「顯示設定」。",
-          "找到「縮放與版面配置」。",
-          "把「縮放」改成 125% 或 150%。",
-          "點「保留變更」，字和圖示就會變大。",
-          "如果還是太小，再用「調整字體大小」把字放大。",
-        ],
-      },
-      {
-        id: "mac",
-        name: "Mac 電腦",
-        icon: "🍎",
-        steps: [
-          "點左上角蘋果 →「系統設定」→「顯示器」。",
-          "點「解析度」。",
-          "選較大的顯示方式，不要選最小的。",
-          "回到「顯示」，點「文字大小」把字調大。",
-          "看網頁時，也可以按 Command 加加號放大。",
-        ],
-      },
-    ],
-  },
-  watch_call: {
-    category: "watch",
-    icon: "⌚",
-    title: "智慧手錶：打電話 / 傳訊息",
-    systems: [
-      {
-        id: "watch-ios",
-        name: "Apple Watch",
-        icon: "⌚",
-        steps: [
-          "打開「電話」app。",
-          "輸入號碼，或點選家人名字。",
-          "按「回呼」開始通話。",
-        ],
-      },
-      {
-        id: "watch-android",
-        name: "安卓手錶（Wear OS）",
-        icon: "⌚",
-        steps: [
-          "開啟「通話」app。",
-          "輸入號碼，或點選家人。",
-          "按綠色按鈕撥打。",
-        ],
-      },
-    ],
-  },
-  watch_health: {
-    category: "watch",
-    icon: "❤️",
-    title: "智慧手錶：看健康數據",
-    systems: [
-      {
-        id: "watch-ios",
-        name: "Apple Watch",
-        icon: "⌚",
-        steps: [
-          "打開「健康」app。",
-          "看一下心率數值。",
-        ],
-      },
-      {
-        id: "watch-android",
-        name: "安卓手錶（Wear OS）",
-        icon: "⌚",
-        steps: [
-          "開啟「健康」app。",
-          "看一下心率數值。",
-        ],
-      },
-    ],
-  },
-  watch_heart_rate: {
-    category: "watch",
-    icon: "❤️",
-    title: "心跳（心率）",
-    systems: [
-      {
-        id: "watch-ios",
-        name: "Apple Watch",
-        icon: "⌚",
-        steps: [
-          "在手錶上打開「心率」app（心形圖示）。",
-          "戴穩手錶，等幾秒，會出現每分鐘心跳次數。",
-          "在 iPhone「健康」app →「心率」可以看以前的記錄。",
-          "作用：看心臟跳得快不快、穩不穩定。休息時每分鐘 60～100 下是常見範圍。",
-          "警訊：休息時一直超過 120 或低於 50，又頭昏、胸悶，請盡快就醫；胸痛或快昏倒請打 119。",
-        ],
-      },
-      {
-        id: "watch-android",
-        name: "安卓手錶（Wear OS）",
-        icon: "⌚",
-        steps: [
-          "在手錶上打開「心率」app。",
-          "戴穩手錶，等幾秒看每分鐘心跳次數。",
-          "在手機的 Samsung Health 或 Google 健康 app 可以看記錄。",
-          "作用：看心臟跳得快不快、穩不穩定。休息時每分鐘 60～100 下是常見範圍。",
-          "警訊：休息時一直超過 120 或低於 50，又頭昏、胸悶，請盡快就醫；胸痛或快昏倒請打 119。",
-        ],
-      },
-    ],
-  },
-  watch_blood_oxygen: {
-    category: "watch",
-    icon: "🩸",
-    title: "血氧（SpO₂）",
-    systems: [
-      {
-        id: "watch-ios",
-        name: "Apple Watch",
-        icon: "⌚",
-        steps: [
-          "在手錶上打開「血氧」app。",
-          "把手錶戴緊、手掌朝上不要動，等大約 15 秒。",
-          "數字是血液裡氧氣的比例，一般約 95%～100%。",
-          "手指冰冷、指甲油或手錶太鬆會不準，可以先擦乾再量。",
-          "警訊：低於 92%，或喘不過氣、嘴唇發紫，請盡快就醫或打 119。",
-        ],
-      },
-      {
-        id: "watch-android",
-        name: "安卓手錶（Wear OS）",
-        icon: "⌚",
-        steps: [
-          "在手錶上打開「血氧」（SpO₂）app；若找不到，到手機健康 app 查看。",
-          "戴穩手錶、手放平不要動，等大約 15 秒。",
-          "數字一般約 95%～100%。",
-          "手指冰冷或手錶太鬆會不準。",
-          "警訊：低於 92%，或喘不過氣、嘴唇發紫，請盡快就醫或打 119。",
-        ],
-      },
-    ],
-  },
-  watch_ecg: {
-    category: "watch",
-    icon: "📈",
-    title: "心電圖（ECG）",
-    systems: [
-      {
-        id: "watch-ios",
-        name: "Apple Watch",
-        icon: "⌚",
-        steps: [
-          "在手錶上打開「心電圖」app（或在 iPhone「健康」app 裡打開）。",
-          "坐下來，手指按住錶冠約 30 秒，不要說話。",
-          "畫面會顯示「竇性心律」或「心房顫動」等結果。",
-          "作用：記錄心臟的電氣活動，幫醫生發現心律不整。",
-          "警訊：胸痛、冒冷汗、快昏倒時，不要等手錶量，直接打 119。",
-          "手錶結果不是醫生診斷；異常請帶著記錄去看醫生。",
-        ],
-      },
-      {
-        id: "watch-android",
-        name: "安卓手錶（Wear OS）",
-        icon: "⌚",
-        steps: [
-          "部分三星手錶才有「心電圖」app，先在錶上找找看。",
-          "照螢幕指示，把手指放在感應處約 30 秒。",
-          "結果會顯示是否正常，或疑似心房顫動。",
-          "作用：記錄心電活動，幫醫生判斷心律問題。",
-          "警訊：胸痛、昏倒、呼吸困難請直接打 119。",
-          "如果沒有這個 app，代表手錶不支援，可改量心跳與血氧。",
-        ],
-      },
-    ],
-  },
-  watch_sleep: {
-    category: "watch",
-    icon: "😴",
-    title: "睡眠紀錄",
-    systems: [
-      {
-        id: "watch-ios",
-        name: "Apple Watch",
-        icon: "⌚",
-        steps: [
-          "在 iPhone「健康」app →「睡眠」設定睡覺和起床時間。",
-          "睡覺時戴著手錶，隔天會顯示睡了多久、深睡與淺睡時間。",
-          "作用：看有沒有睡飽、睡眠品質好不好。",
-          "如果長期少於 6 小時、白天一直想睡，建議找醫生討論。",
-          "警訊：打呼很大聲又突然停住呼吸、睡醒頭痛，可能是睡眠呼吸中止症，請就醫。",
-        ],
-      },
-      {
-        id: "watch-android",
-        name: "安卓手錶（Wear OS）",
-        icon: "⌚",
-        steps: [
-          "在 Samsung Health 或 Google 健康 app →「睡眠」設定睡眠時間。",
-          "戴著手錶睡覺，隔天看睡眠時間與階段。",
-          "作用：看有沒有睡飽、睡眠品質好不好。",
-          "警訊：打呼很大聲、呼吸停頓、白天一直想睡，請就醫檢查。",
-        ],
-      },
-    ],
-  },
-  watch_other_health: {
-    category: "watch",
-    icon: "🌡️",
-    title: "其他健康指標（溫度、呼吸、壓力）",
-    systems: [
-      {
-        id: "watch-ios",
-        name: "Apple Watch",
-        icon: "⌚",
-        steps: [
-          "在 iPhone「健康」app 可找「手腕溫度」、「呼吸頻率」與「心率變異性」。",
-          "睡覺時戴著手錶，會自動記錄，做為平常的參考值。",
-          "作用：溫度變高可能是發燒；呼吸變快可能表示喘；壓力與 HRV 反映身體疲勞。",
-          "警訊：發高燒、呼吸每分鐘超過 25 次、胸悶或喘不過氣，請盡快就醫；呼吸困難請打 119。",
-          "這些數字僅供參考，身體不舒服還是要找醫生。",
-        ],
-      },
-      {
-        id: "watch-android",
-        name: "安卓手錶（Wear OS）",
-        icon: "⌚",
-        steps: [
-          "在 Samsung Health 或健康 app 找「皮膚溫度」、「呼吸速率」與「壓力」（部分手錶支援）。",
-          "睡覺戴著手錶，會記錄與平常的差異。",
-          "作用：溫度變高可能是發燒；呼吸變快可能表示喘；壓力指數反映疲勞。",
-          "警訊：發高燒、呼吸很快、胸悶或喘不過氣，請盡快就醫；呼吸困難請打 119。",
-          "如果手錶沒有這些功能，代表機型不支援。",
-        ],
-      },
-    ],
-  },
-  watch_fall_sos: {
-    category: "watch",
-    icon: "🆘",
-    title: "跌倒偵測與 SOS",
-    systems: [
-      {
-        id: "watch-ios",
-        name: "Apple Watch",
-        icon: "⌚",
-        steps: [
-          "在 iPhone「設定」→「SOS 緊急服務」，打開「跌倒偵測」。",
-          "再打開「自動撥打緊急電話」，並確認有設定家人為緊急聯絡人。",
-          "作用：嚴重跌倒且您沒有回應時，手錶會自動通知家人並撥打 119。",
-          "如果誤觸，手錶會先提示，點「我沒跌倒」就可取消。",
-          "警訊：跌倒後意識不清、劇痛、站不起來，請不要勉強起身，打 119 或等救援。",
-        ],
-      },
-      {
-        id: "watch-android",
-        name: "安卓手錶（Wear OS）",
-        icon: "⌚",
-        steps: [
-          "在 Samsung Health 或手錶「設定」→「安全」打開「跌倒偵測」（部分機型支援）。",
-          "設定緊急聯絡人與自動撥號。",
-          "作用：嚴重跌倒時自動傳訊息或撥打緊急電話給家人。",
-          "警訊：跌倒後頭痛、嘔吐、不能動，請留在原地打 119。",
-          "若手錶沒有此功能，可設 SOS：連按電源鍵幾次撥打緊急電話。",
-        ],
-      },
-    ],
-  },
-  watch_find_phone: {
-    category: "watch",
-    icon: "🔔",
-    title: "讓手錶把手機叫出來",
-    systems: [
-      {
-        id: "watch-ios",
-        name: "Apple Watch",
-        icon: "⌚",
-        steps: [
-          "在手錶上打開「尋找裝置」app（雷達圖示）。",
-          "點一下您的 iPhone 名稱。",
-          "點「播放聲音」，手機會發出聲音。",
-          "順著聲音找到手機後，點「停止」。",
-          "如果手機靜音或沒電，用家人的手機到 icloud.com/find 找。",
-        ],
-      },
-      {
-        id: "watch-android",
-        name: "安卓手錶（Wear OS）",
-        icon: "⌚",
-        steps: [
-          "在手錶上打開「尋找我的手機」app。",
-          "點「播放聲音」。",
-          "手機會響，順著聲音找。",
-          "找到後，按手錶上的「停止」。",
-          "如果找不到，用家人的手機到 google.com/android/find 找。",
-        ],
-      },
-    ],
-  },
-  watch_camera_remote: {
-    category: "watch",
-    icon: "📷",
-    title: "用錶遙控手機相機拍照",
-    systems: [
-      {
-        id: "watch-ios",
-        name: "Apple Watch",
-        icon: "⌚",
-        steps: [
-          "在 iPhone 上打開「相機」app。",
-          "在手錶上打開「相機」app（或從智慧型堆疊點相機圖示）。",
-          "手錶會顯示手機的畫面，先喬好角度。",
-          "點手錶上的快門鍵拍照。",
-          "照片會存到手機的相簿。",
-        ],
-      },
-      {
-        id: "watch-android",
-        name: "安卓手錶（Wear OS）",
-        icon: "⌚",
-        steps: [
-          "在手機上打開「相機」app。",
-          "在手錶上打開「相機遙控」app（若沒有，請家人從 Google Play 安裝）。",
-          "手錶會顯示手機畫面，先喬好角度。",
-          "點手錶上的快門鍵拍照。",
-          "到手機相簿看照片。",
-        ],
-      },
-    ],
-  },
-  watch_alarm: {
-    category: "watch",
-    icon: "⏰",
-    title: "智慧手錶：設定鬧鐘",
-    systems: [
-      {
-        id: "watch-ios",
-        name: "Apple Watch",
-        icon: "⌚",
-        steps: [
-          "開啟「鬧鐘」app。",
-          "設定鬧鐘時間。",
-          "打開鬧鐘。",
-        ],
-      },
-      {
-        id: "watch-android",
-        name: "安卓手錶（Wear OS）",
-        icon: "⌚",
-        steps: [
-          "開啟「鬧鐘」app。",
-          "設定鬧鐘時間，並打開它。",
-        ],
-      },
-    ],
-  },
+
+import { categories, emergencyNumbers, tasks } from "./js/tasks.js?v=noaction1";
+import * as store from "./js/store.js?v=noaction1";
+import { speak, stop as stopSpeech, isSpeechSupported } from "./js/speech.js";
+import { detectPlatform, isPlatformMatch, preferredSystemId } from "./js/device.js";
+
+const $ = (id) => document.getElementById(id);
+const speechOk = isSpeechSupported();
+const platform = detectPlatform();
+
+const dom = {
+  banner: $("offlineBanner"),
+  fontSwitch: $("fontSwitch"),
+  voiceToggle: $("voiceToggle"),
+  themeToggle: $("themeToggle"),
+  settingsBtn: $("settingsBtn"),
+  familyActions: $("familyActions"),
+  emergencyActions: $("emergencyActions"),
+  resumeCard: $("resumeCard"),
+  categoryNav: $("categoryNav"),
+  categorySections: $("categorySections"),
+  installBtn: $("installBtn"),
+  toTop: $("toTop"),
+  toast: $("toast"),
+  setupDialog: $("setupDialog"),
+  setupClose: $("setupClose"),
+  contactRows: $("contactRows"),
+  addContact: $("addContact"),
+  voiceCheckbox: $("voiceCheckbox"),
+  saveSetup: $("saveSetup"),
+  clearContacts: $("clearContacts"),
+  setupStatus: $("setupStatus"),
+  installHelpBtn: $("installHelpBtn"),
+  guideDialog: $("guideDialog"),
+  guideProgress: $("guideProgress"),
+  guideBar: $("guideBar"),
+  guideTask: $("guideTask"),
+  guideIcon: $("guideIcon"),
+  guideText: $("guideText"),
+  guideStatus: $("guideStatus"),
+  guidePrev: $("guidePrev"),
+  guideSpeak: $("guideSpeak"),
+  guideNext: $("guideNext"),
+  guideRestart: $("guideRestart"),
+  guideClose: $("guideClose"),
+  callDialog: $("callDialog"),
+  callDialogIcon: $("callDialogIcon"),
+  callDialogTitle: $("callDialogTitle"),
+  callDialogText: $("callDialogText"),
+  callConfirm: $("callConfirm"),
+  callCancel: $("callCancel"),
+  installDialog: $("installDialog"),
+  installClose: $("installClose"),
+  installDone: $("installDone"),
 };
 
+const state = {
+  contacts: store.loadContacts(),
+  voiceEnabled: store.loadVoiceEnabled(),
+  theme: store.loadTheme(),
+  lastTask: store.loadLastTask(),
+  openTask: null,
+  guide: null,
+  pendingCall: null,
+  deferredInstall: null,
+  toastTimer: null,
+};
+
+let guideSpeechToken = 0;
+
 /* ============================================================
-   目前選到的任務
+   初始化
    ============================================================ */
-let currentTaskId = null;
-let currentSection = null;
 
-const taskButtons = document.querySelectorAll(".task-btn");
-
-function getTaskStepsEl(section) {
-  return section.querySelector(".task-steps");
+function init() {
+  applyFont(store.loadFont(), { persist: false });
+  applyTheme(store.loadTheme(), { persist: false });
+  renderCategories();
+  renderSections();
+  renderEmergencyButtons();
+  renderQuickHelp();
+  renderResume();
+  syncVoiceUI();
+  wireHeader();
+  wireSections();
+  wireDialogs();
+  wireGlobal();
+  setupPwa();
+  updateOnlineState();
 }
 
-function getTaskIconEl(section) {
-  return section.querySelector(".task-detail-icon");
+/* ============================================================
+   共用小工具
+   ============================================================ */
+
+function getSystem(task, systemId) {
+  return task.systems.find((system) => system.id === systemId) || task.systems[0];
 }
 
-function getTaskTitleEl(section) {
-  return section.querySelector(".task-detail-title");
+function familyName() {
+  return state.contacts[0] ? state.contacts[0].name : "家人";
 }
 
-function renderTaskSteps(task, taskId) {
-  const taskSteps = getTaskStepsEl(currentSection);
-  taskSteps.innerHTML = "";
-  task.systems.forEach((sys) => {
-    const card = document.createElement("div");
-    card.className = "system-card";
+function personalize(text) {
+  return String(text).replace(/\{\{family\}\}/g, () => familyName());
+}
 
-    const h4 = document.createElement("h4");
-    h4.innerHTML = sys.icon + " " + sys.name;
-    card.appendChild(h4);
+function showToast(message) {
+  if (!dom.toast) return;
+  dom.toast.textContent = message;
+  dom.toast.hidden = false;
+  window.clearTimeout(state.toastTimer);
+  state.toastTimer = window.setTimeout(() => {
+    dom.toast.hidden = true;
+  }, 2800);
+}
 
-    const ol = document.createElement("ol");
-    ol.className = "steps";
-    sys.steps.forEach((stepText, idx) => {
-      const li = document.createElement("li");
-      const num = document.createElement("span");
-      num.className = "step-no";
-      num.textContent = String(idx + 1);
-      const text = document.createElement("span");
-      text.textContent = stepText;
-      li.appendChild(num);
-      li.appendChild(text);
-      ol.appendChild(li);
+function formatTime(timestamp) {
+  try {
+    return new Intl.DateTimeFormat("zh-TW", {
+      month: "numeric",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).format(new Date(timestamp));
+  } catch (e) {
+    return "";
+  }
+}
+
+function prefersReducedMotion() {
+  return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+/* ============================================================
+   字級
+   ============================================================ */
+
+const FONT_MAP = { small: "18px", medium: "20px", large: "24px" };
+const FONT_LABEL = { small: "小", medium: "中", large: "大" };
+
+function applyFont(size, options = {}) {
+  const { persist = true, announce = false } = options;
+  const valid = Object.prototype.hasOwnProperty.call(FONT_MAP, size) ? size : "large";
+  document.documentElement.style.fontSize = FONT_MAP[valid];
+  if (persist) store.saveFont(valid);
+  document.querySelectorAll(".font-btn").forEach((button) => {
+    button.setAttribute("aria-pressed", String(button.dataset.size === valid));
+  });
+  if (announce) showToast(`字級已改為「${FONT_LABEL[valid]}」。`);
+}
+
+/* ============================================================
+   深色 / 淺色模式
+   ============================================================ */
+
+function applyTheme(theme, options = {}) {
+  const { persist = true, announce = false } = options;
+  const value = theme === "dark" ? "dark" : "light";
+  state.theme = value;
+  document.documentElement.dataset.theme = value;
+  if (persist) store.saveTheme(value);
+  syncThemeUI();
+  if (announce) {
+    showToast(value === "dark" ? "已切換為深色模式。" : "已切換為淺色模式。");
+  }
+}
+
+function syncThemeUI() {
+  const dark = state.theme === "dark";
+  dom.themeToggle.setAttribute("aria-pressed", String(dark));
+  dom.themeToggle.textContent = dark ? "☀️ 淺色模式" : "🌙 深色模式";
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute("content", dark ? "#111111" : "#ffffff");
+}
+
+/* ============================================================
+   語音開關
+   ============================================================ */
+
+function setVoiceEnabled(enabled, options = {}) {
+  const { persist = true, announce = false } = options;
+  state.voiceEnabled = Boolean(enabled);
+  if (persist) store.saveVoiceEnabled(state.voiceEnabled);
+  syncVoiceUI();
+  if (!state.voiceEnabled) stopSpeech();
+  if (announce) {
+    showToast(state.voiceEnabled ? "已開啟自動朗讀。" : "已關閉自動朗讀。");
+  }
+}
+
+function syncVoiceUI() {
+  const enabled = state.voiceEnabled && speechOk;
+  dom.voiceToggle.disabled = !speechOk;
+  dom.voiceToggle.setAttribute("aria-pressed", String(enabled));
+  dom.voiceToggle.classList.toggle("is-off", !enabled);
+  dom.voiceToggle.textContent = !speechOk
+    ? "🔇 不支援語音"
+    : enabled
+      ? "🔊 自動朗讀：開"
+      : "🔇 自動朗讀：關";
+  dom.voiceCheckbox.checked = enabled;
+  dom.voiceCheckbox.disabled = !speechOk;
+  dom.guideSpeak.hidden = !speechOk;
+}
+
+/* ============================================================
+   分類與教學區塊
+   ============================================================ */
+
+function renderCategories() {
+  dom.categoryNav.innerHTML = "";
+  categories.forEach((category) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "cat-card";
+    button.dataset.target = category.id;
+
+    const icon = document.createElement("span");
+    icon.className = "cat-icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = category.icon;
+
+    const name = document.createElement("span");
+    name.className = "cat-name";
+    name.textContent = category.name;
+
+    const sub = document.createElement("span");
+    sub.className = "cat-sub";
+    sub.textContent = category.sub;
+
+    button.append(icon, name, sub);
+    button.addEventListener("click", () => {
+      const section = document.getElementById(category.id);
+      if (section) {
+        section.scrollIntoView({
+          behavior: prefersReducedMotion() ? "auto" : "smooth",
+          block: "start",
+        });
+      }
     });
-    card.appendChild(ol);
+    dom.categoryNav.append(button);
+  });
+}
 
-    taskSteps.appendChild(card);
+function renderSections() {
+  dom.categorySections.innerHTML = "";
+
+  categories.forEach((category) => {
+    const section = document.createElement("section");
+    section.id = category.id;
+    section.className = "category-section";
+    section.dataset.category = category.id;
+    section.setAttribute("aria-labelledby", `${category.id}-title`);
+
+    const title = document.createElement("h2");
+    title.id = `${category.id}-title`;
+    title.textContent = `${category.icon} ${category.name}`;
+
+    const lead = document.createElement("p");
+    lead.className = "lead";
+    lead.textContent = category.lead;
+
+    const grid = document.createElement("div");
+    grid.className = "task-grid";
+    grid.setAttribute("role", "group");
+    grid.setAttribute("aria-label", `${category.name}可學習動作`);
+
+    Object.entries(tasks)
+      .filter(([, task]) => task.category === category.id)
+      .forEach(([taskId, task]) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "task-btn";
+        button.dataset.task = taskId;
+        button.setAttribute("aria-pressed", "false");
+
+        const emoji = document.createElement("span");
+        emoji.className = "task-emoji";
+        emoji.setAttribute("aria-hidden", "true");
+        emoji.textContent = task.icon;
+
+        const label = document.createElement("span");
+        label.className = "task-label";
+        label.textContent = task.title;
+
+        button.append(emoji, label);
+        grid.append(button);
+      });
+
+    const detail = createTaskDetail();
+
+    section.append(title, lead, grid, detail);
+    dom.categorySections.append(section);
+  });
+}
+
+function createTaskDetail() {
+  const detail = document.createElement("div");
+  detail.className = "task-detail";
+  detail.hidden = true;
+  detail.innerHTML = `
+    <div class="task-detail-header">
+      <span class="task-detail-icon" aria-hidden="true"></span>
+      <h3 class="task-detail-title" tabindex="-1"></h3>
+      <button type="button" class="back-btn">← 回選擇</button>
+    </div>
+    <p class="task-summary"></p>
+    <div class="system-tabs" role="group" aria-label="選擇您的裝置" hidden></div>
+    <p class="system-note" aria-live="polite" hidden></p>
+    <div class="detail-actions">
+      <button type="button" class="start-guide">▶ 一步一步帶我做</button>
+    </div>
+    <div class="task-callout"></div>
+    <div class="task-steps"></div>
+    <div class="task-extras"></div>
+    <button type="button" class="back-btn back-btn-bottom">← 回選擇</button>
+  `;
+  return detail;
+}
+
+/* ============================================================
+   開啟 / 關閉教學
+   ============================================================ */
+
+function openTask(taskId, systemId) {
+  const task = tasks[taskId];
+  if (!task) return;
+  const section = document.getElementById(task.category);
+  if (!section) return;
+
+  closeAllDetails();
+
+  const detail = section.querySelector(".task-detail");
+  const chosenId =
+    systemId && task.systems.some((system) => system.id === systemId)
+      ? systemId
+      : preferredSystemId(task, platform);
+
+  state.openTask = { taskId, systemId: chosenId, section };
+  section.dataset.openTask = taskId;
+
+  detail.querySelector(".task-detail-icon").textContent = task.icon;
+  detail.querySelector(".task-detail-title").textContent = task.title;
+  detail.querySelector(".task-summary").textContent = task.summary || "";
+
+  renderTabs(task, chosenId, detail);
+  updateSystemNote(task, chosenId, detail);
+  renderSteps(task, chosenId, detail);
+  renderCallout(task, detail);
+  renderExtras(task, detail);
+
+  detail.hidden = false;
+  section.classList.add("is-active");
+  updateTaskButtonStates(taskId);
+  rememberTask(taskId, chosenId);
+  renderResume();
+
+  const title = detail.querySelector(".task-detail-title");
+  detail.scrollIntoView({
+    behavior: prefersReducedMotion() ? "auto" : "smooth",
+    block: "start",
+  });
+  window.setTimeout(() => title.focus({ preventScroll: true }), prefersReducedMotion() ? 0 : 250);
+}
+
+function closeTask(section) {
+  if (!section) return;
+  const taskId = section.dataset.openTask;
+  section.classList.remove("is-active");
+  section.querySelector(".task-detail").hidden = true;
+  delete section.dataset.openTask;
+  section.querySelectorAll(".task-btn").forEach((button) => {
+    button.setAttribute("aria-pressed", "false");
   });
 
-  // 若任務有設定 video，就顯示示意影片
-  if (task.video) {
-    const videoWrap = document.createElement("div");
-    videoWrap.className = "task-video";
-
-    const videoTitle = document.createElement("h4");
-    videoTitle.textContent = task.video.title || "示意影片";
-    videoWrap.appendChild(videoTitle);
-
-    const iframe = document.createElement("iframe");
-    iframe.src = task.video.embedUrl || "";
-    iframe.setAttribute("title", task.video.title || "示意影片");
-    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-    iframe.allowFullscreen = true;
-    videoWrap.appendChild(iframe);
-
-    taskSteps.appendChild(videoWrap);
+  if (state.openTask && state.openTask.section === section) {
+    state.openTask = null;
   }
 
-  // 「傳送我的位置」任務：加上定位分享卡片
-  if (taskId === "location") {
+  stopSpeech();
+  renderResume();
+
+  const button = taskId
+    ? section.querySelector(`.task-btn[data-task="${taskId}"]`)
+    : section.querySelector(".task-btn");
+  if (button) button.focus();
+  section.scrollIntoView({
+    behavior: prefersReducedMotion() ? "auto" : "smooth",
+    block: "start",
+  });
+}
+
+function closeAllDetails() {
+  dom.categorySections.querySelectorAll(".category-section").forEach((section) => {
+    section.classList.remove("is-active");
+    const detail = section.querySelector(".task-detail");
+    if (detail) detail.hidden = true;
+    delete section.dataset.openTask;
+    section.querySelectorAll(".task-btn").forEach((button) => {
+      button.setAttribute("aria-pressed", "false");
+    });
+  });
+  state.openTask = null;
+  stopSpeech();
+}
+
+function updateTaskButtonStates(activeTaskId) {
+  dom.categorySections.querySelectorAll(".task-btn").forEach((button) => {
+    button.setAttribute("aria-pressed", String(button.dataset.task === activeTaskId));
+  });
+}
+
+function rememberTask(taskId, systemId) {
+  const record = { taskId, systemId, at: Date.now() };
+  state.lastTask = record;
+  store.saveLastTask(record);
+}
+
+/* ============================================================
+   裝置版本切換
+   ============================================================ */
+
+function renderTabs(task, activeId, detail) {
+  const tabs = detail.querySelector(".system-tabs");
+  tabs.innerHTML = "";
+
+  if (task.systems.length < 2) {
+    tabs.hidden = true;
+    return;
+  }
+
+  tabs.hidden = false;
+  task.systems.forEach((system) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "system-tab";
+    button.dataset.system = system.id;
+    button.setAttribute("aria-pressed", String(system.id === activeId));
+
+    const icon = document.createElement("span");
+    icon.className = "system-icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = system.icon;
+
+    const name = document.createElement("span");
+    name.textContent = system.shortName;
+
+    button.append(icon, name);
+    tabs.append(button);
+  });
+}
+
+function updateSystemNote(task, activeId, detail) {
+  const note = detail.querySelector(".system-note");
+  if (task.systems.length < 2) {
+    note.hidden = true;
+    return;
+  }
+  const system = getSystem(task, activeId);
+  const isAuto =
+    isPlatformMatch(task, platform) && preferredSystemId(task, platform) === activeId;
+  note.hidden = false;
+  note.textContent = isAuto
+    ? `✅ 已自動為您選擇「${system.shortName}」版。`
+    : `正在看「${system.shortName}」版，可以按上面的按鈕切換。`;
+}
+
+function selectSystem(systemId) {
+  const current = state.openTask;
+  if (!current) return;
+  const task = tasks[current.taskId];
+  if (!task.systems.some((system) => system.id === systemId)) return;
+
+  current.systemId = systemId;
+  const detail = current.section.querySelector(".task-detail");
+
+  detail.querySelectorAll(".system-tab").forEach((tab) => {
+    tab.setAttribute("aria-pressed", String(tab.dataset.system === systemId));
+  });
+
+  updateSystemNote(task, systemId, detail);
+  renderSteps(task, systemId, detail);
+  rememberTask(current.taskId, systemId);
+  showToast(`正在看「${getSystem(task, systemId).shortName}」版。`);
+}
+
+/* ============================================================
+   步驟與補充內容
+   ============================================================ */
+
+function renderSteps(task, systemId, detail) {
+  const system = getSystem(task, systemId);
+  const container = detail.querySelector(".task-steps");
+  container.innerHTML = "";
+
+  const list = document.createElement("ol");
+  list.className = "steps";
+
+  system.steps.forEach((raw, index) => {
+    const text = personalize(raw);
+    const item = document.createElement("li");
+
+    const number = document.createElement("span");
+    number.className = "step-no";
+    number.setAttribute("aria-hidden", "true");
+    number.textContent = String(index + 1);
+
+    const paragraph = document.createElement("p");
+    paragraph.className = "step-text";
+    paragraph.textContent = text;
+
+    item.append(number, paragraph);
+
+    if (speechOk) {
+      const speakButton = document.createElement("button");
+      speakButton.type = "button";
+      speakButton.className = "step-speak";
+      speakButton.dataset.step = String(index);
+      speakButton.innerHTML =
+        '<span aria-hidden="true">🔊</span><span class="sr-only">唸出第 ' +
+        (index + 1) +
+        " 步</span>";
+      item.append(speakButton);
+    }
+
+    list.append(item);
+  });
+
+  container.append(list);
+}
+
+function renderCallout(task, detail) {
+  const callout = detail.querySelector(".task-callout");
+  callout.innerHTML = "";
+  if (!task.quickCall || !task.quickCall.length) return;
+
+  const card = document.createElement("div");
+  card.className = "quickcall-card";
+
+  const title = document.createElement("h4");
+  title.textContent = "📞 需要時，按一下就能撥打";
+
+  const note = document.createElement("p");
+  note.className = "quickcall-note";
+  note.textContent = "按下後會先請您確認，才會撥號。";
+
+  const grid = document.createElement("div");
+  grid.className = "quickcall-grid";
+
+  task.quickCall.forEach((item) => {
+    const link = document.createElement("a");
+    link.className = "quickcall-btn" + (item.tone === "danger" ? " is-danger" : "");
+    link.href = `tel:${item.tel}`;
+    link.dataset.tel = item.tel;
+    link.dataset.confirmCall = item.label;
+
+    const number = document.createElement("span");
+    number.className = "quickcall-num";
+    number.textContent = item.tel;
+
+    const label = document.createElement("span");
+    label.className = "quickcall-label";
+    label.textContent = item.label;
+
+    link.append(number, label);
+    grid.append(link);
+  });
+
+  card.append(title, note, grid);
+  callout.append(card);
+}
+
+function renderExtras(task, detail) {
+  const extras = detail.querySelector(".task-extras");
+  extras.innerHTML = "";
+
+  if (task.tip) {
+    const tip = document.createElement("p");
+    tip.className = "task-tip";
+    const icon = document.createElement("span");
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = "💡 ";
+    tip.append(icon, document.createTextNode(task.tip));
+    extras.append(tip);
+  }
+
+  if (state.openTask && state.openTask.taskId === "location") {
     const locationCard = createLocationCard();
-    taskSteps.appendChild(locationCard);
+    extras.append(locationCard);
     wireLocationCard(locationCard);
   }
+
+  if (task.video && task.video.embedUrl) {
+    const wrap = document.createElement("div");
+    wrap.className = "task-video";
+
+    const title = document.createElement("h4");
+    title.textContent = task.video.title || "示意影片";
+
+    const iframe = document.createElement("iframe");
+    iframe.src = task.video.embedUrl;
+    iframe.title = task.video.title || "示意影片";
+    iframe.allow =
+      "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+    iframe.allowFullscreen = true;
+    iframe.loading = "lazy";
+
+    wrap.append(title, iframe);
+    extras.append(wrap);
+  }
 }
 
-taskButtons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const taskId = btn.getAttribute("data-task");
-    const task = tasks[taskId];
-    if (!task) {
-      // 舊快取的 script.js 找不到新按鈕的資料時，不要毫無反應
-      const section = btn.closest(".category-section");
-      if (section) {
-        getTaskTitleEl(section).textContent = "這個項目暫時沒有內容";
-        const steps = getTaskStepsEl(section);
-        if (steps) steps.textContent = "請重新整理網頁（按 Ctrl + F5，手機請下拉重新整理）後再試一次。";
-        section.querySelector(".task-detail").hidden = false;
+/* ============================================================
+   一步一步教學
+   ============================================================ */
+
+function startGuide() {
+  if (!state.openTask) return;
+  const task = tasks[state.openTask.taskId];
+  if (!task) return;
+  state.guide = {
+    taskId: state.openTask.taskId,
+    systemId: state.openTask.systemId,
+    index: 0,
+    done: false,
+  };
+  dom.guideDialog.showModal();
+  renderGuide({ focus: true });
+}
+
+function renderGuide(options = {}) {
+  const { focus = false } = options;
+  const guide = state.guide;
+  if (!guide) return;
+  const task = tasks[guide.taskId];
+  const system = getSystem(task, guide.systemId);
+  const steps = system.steps;
+  const text = personalize(steps[guide.index]);
+
+  guide.done = false;
+  dom.guideProgress.textContent = `第 ${guide.index + 1} 步，共 ${steps.length} 步`;
+  dom.guideTask.textContent = `${task.icon} ${task.title}`;
+  dom.guideIcon.textContent = task.icon;
+  dom.guideText.textContent = text;
+  dom.guideBar.style.width = `${((guide.index + 1) / steps.length) * 100}%`;
+  dom.guidePrev.disabled = guide.index === 0;
+  dom.guidePrev.hidden = false;
+  dom.guideSpeak.hidden = !speechOk;
+  dom.guideRestart.hidden = true;
+  dom.guideNext.textContent =
+    guide.index === steps.length - 1 ? "完成 ✓" : "下一步 →";
+  dom.guideStatus.textContent = "";
+
+  if (state.voiceEnabled && speechOk) {
+    speakGuide(text);
+  } else {
+    stopSpeech();
+  }
+
+  if (focus) {
+    try {
+      dom.guideText.focus({ preventScroll: true });
+    } catch (e) {
+      dom.guideText.focus();
+    }
+  }
+}
+
+function speakGuide(text) {
+  const token = ++guideSpeechToken;
+  speak(text, {
+    onStart: () => {
+      if (token === guideSpeechToken) {
+        dom.guideStatus.textContent = "🔊 正在為您唸出這一步…";
       }
-      return;
-    }
+    },
+    onEnd: () => {
+      if (token === guideSpeechToken) dom.guideStatus.textContent = "";
+    },
+    onError: () => {
+      if (token === guideSpeechToken) dom.guideStatus.textContent = "";
+    },
+  });
+}
 
-    currentTaskId = taskId;
-    currentSection = btn.closest(".category-section");
-    if (!currentSection) return;
+function finishGuide() {
+  const guide = state.guide;
+  if (!guide) return;
+  const task = tasks[guide.taskId];
 
-    // 把教學內容移到點選的按鈕正下方展開（而不是整排按鈕的最下面）
-    const detail = currentSection.querySelector(".task-detail");
-    if (detail) btn.after(detail);
+  guide.done = true;
+  guideSpeechToken += 1;
+  stopSpeech();
 
-    getTaskIconEl(currentSection).textContent = task.icon;
-    getTaskTitleEl(currentSection).textContent = task.title;
-    renderTaskSteps(task, taskId);
+  dom.guideProgress.textContent = "完成";
+  dom.guideBar.style.width = "100%";
+  dom.guideTask.textContent = `${task.icon} ${task.title}`;
+  dom.guideIcon.textContent = "🎉";
+  dom.guideText.textContent = "太棒了！您完成了所有步驟。";
+  dom.guidePrev.hidden = true;
+  dom.guideSpeak.hidden = true;
+  dom.guideNext.textContent = "回到教學";
+  dom.guideRestart.hidden = false;
+  dom.guideStatus.textContent = "";
 
-    taskButtons.forEach((b) => {
-      b.setAttribute("aria-pressed", String(b === btn));
+  if (state.voiceEnabled && speechOk) {
+    const token = ++guideSpeechToken;
+    speak("太棒了！您完成了所有步驟。", {
+      onStart: () => {
+        if (token === guideSpeechToken) {
+          dom.guideStatus.textContent = "🔊 正在為您唸出…";
+        }
+      },
+      onEnd: () => {
+        if (token === guideSpeechToken) dom.guideStatus.textContent = "";
+      },
+      onError: () => {
+        if (token === guideSpeechToken) dom.guideStatus.textContent = "";
+      },
     });
-
-    currentSection.querySelector(".task-detail").hidden = false;
-  });
-});
-
-document.querySelectorAll(".back-btn").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const section = btn.closest(".category-section");
-    if (!section) return;
-    section.querySelectorAll(".task-btn").forEach((b) => b.setAttribute("aria-pressed", "false"));
-    section.querySelector(".task-detail").hidden = true;
-    if (currentTaskId && tasks[currentTaskId].category === section.getAttribute("data-category")) {
-      currentTaskId = null;
-      currentSection = null;
-    }
-  });
-});
-
-/* ============================================================
-   分類導覽：點擊後捲動到對應分類
-   ============================================================ */
-document.querySelectorAll(".cat-card").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const target = btn.getAttribute("data-target");
-    const el = document.getElementById(target);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  });
-});
-
-/* ============================================================
-   字級切換（小：18 / 中：20 / 大：24，預設大）
-   ============================================================ */
-const fontButtons = document.querySelectorAll(".font-btn");
-const FONT_KEY = "simple-device-font";
-const FONT_MAP = {
-  small: "18px",
-  medium: "20px",
-  large: "24px",
-};
-
-function applyFont(size) {
-  document.documentElement.style.fontSize = FONT_MAP[size] || "24px";
-  try {
-    localStorage.setItem(FONT_KEY, size);
-  } catch (e) {
-    /* 忽略無法寫入的環境 */
-  }
-  fontButtons.forEach((b) => {
-    b.setAttribute("aria-pressed", String(b.getAttribute("data-size") === size));
-  });
-}
-
-fontButtons.forEach((b) => {
-  b.addEventListener("click", () => {
-    applyFont(b.getAttribute("data-size"));
-  });
-});
-
-let savedFont = "large";
-try {
-  savedFont = localStorage.getItem(FONT_KEY) || "large";
-} catch (e) {
-  /* ignore */
-}
-applyFont(["small", "medium", "large"].includes(savedFont) ? savedFont : "large");
-
-/* ============================================================
-   回到頂端按鈕
-   ============================================================ */
-const toTopBtn = document.getElementById("toTop");
-function toggleToTop() {
-  if (toTopBtn) {
-    toTopBtn.classList.toggle("show", window.scrollY > 400);
   }
 }
-window.addEventListener("scroll", toggleToTop, { passive: true });
-toggleToTop();
 
-if (toTopBtn) {
-  toTopBtn.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+function goToGuideStep(index) {
+  if (!state.guide || state.guide.done) return;
+  const task = tasks[state.guide.taskId];
+  const system = getSystem(task, state.guide.systemId);
+  if (index < 0 || index >= system.steps.length) return;
+  state.guide.index = index;
+  renderGuide();
+}
+
+function speakStep(index) {
+  if (!state.openTask) return;
+  const task = tasks[state.openTask.taskId];
+  const system = getSystem(task, state.openTask.systemId);
+  const text = system.steps[index];
+  if (!text) return;
+  speak(personalize(text), {
+    onError: () => showToast("語音無法使用，請看文字。"),
   });
 }
 
 /* ============================================================
-   傳送我的位置：取得 GPS 座標，產生地圖連結並分享
+   快速求助：家人
    ============================================================ */
 
-// 建立定位分享卡片（只有「傳送我的位置」任務才會用到）
+function renderQuickHelp() {
+  dom.familyActions.innerHTML = "";
+
+  if (!state.contacts.length) {
+    dom.familyActions.classList.add("is-empty");
+    const card = document.createElement("div");
+    card.className = "setup-prompt";
+
+    const icon = document.createElement("p");
+    icon.className = "setup-prompt-icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = "👨‍👩‍👧";
+
+    const title = document.createElement("p");
+    title.className = "setup-prompt-title";
+    title.textContent = "還沒有設定家人的電話";
+
+    const text = document.createElement("p");
+    text.className = "setup-prompt-text";
+    text.textContent = "請家人幫您設定，之後按一下就能打電話。";
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "btn-primary";
+    button.textContent = "請家人幫我設定";
+    button.addEventListener("click", openSetup);
+
+    card.append(icon, title, text, button);
+    dom.familyActions.append(card);
+    return;
+  }
+
+  dom.familyActions.classList.remove("is-empty");
+
+  state.contacts.forEach((contact) => {
+    const card = document.createElement("div");
+    card.className = "family-card";
+
+    const name = document.createElement("p");
+    name.className = "family-name";
+    name.textContent = `👤 ${contact.name}`;
+
+    const buttons = document.createElement("div");
+    buttons.className = "family-buttons";
+
+    const call = document.createElement("a");
+    call.className = "family-call";
+    call.href = `tel:${contact.phone}`;
+    call.setAttribute("aria-label", `打電話給${contact.name}`);
+    const callIcon = document.createElement("span");
+    callIcon.setAttribute("aria-hidden", "true");
+    callIcon.textContent = "📞";
+    const callText = document.createElement("span");
+    callText.textContent = "打電話";
+    call.append(callIcon, callText);
+
+    const sms = document.createElement("a");
+    sms.className = "family-sms";
+    sms.href = `sms:${contact.phone}`;
+    sms.setAttribute("aria-label", `傳簡訊給${contact.name}`);
+    const smsIcon = document.createElement("span");
+    smsIcon.setAttribute("aria-hidden", "true");
+    smsIcon.textContent = "💬";
+    const smsText = document.createElement("span");
+    smsText.textContent = "傳簡訊";
+    sms.append(smsIcon, smsText);
+
+    buttons.append(call, sms);
+    card.append(name, buttons);
+    dom.familyActions.append(card);
+  });
+
+  const edit = document.createElement("button");
+  edit.type = "button";
+  edit.className = "edit-contacts";
+  edit.textContent = "✏️ 修改家人的電話";
+  edit.addEventListener("click", openSetup);
+  dom.familyActions.append(edit);
+}
+
+function renderEmergencyButtons() {
+  dom.emergencyActions.innerHTML = "";
+
+  emergencyNumbers.forEach((item) => {
+    const link = document.createElement("a");
+    link.className = "emergency-btn" + (item.tel === "165" ? " is-info" : "");
+    link.href = `tel:${item.tel}`;
+    link.dataset.tel = item.tel;
+    if (item.confirm) link.dataset.confirmCall = `${item.tel} ${item.name}`;
+
+    const icon = document.createElement("span");
+    icon.className = "emergency-icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = item.icon;
+
+    const number = document.createElement("span");
+    number.className = "emergency-num";
+    number.textContent = item.tel;
+
+    const name = document.createElement("span");
+    name.className = "emergency-name";
+    name.textContent = item.name;
+
+    link.append(icon, number, name);
+    dom.emergencyActions.append(link);
+  });
+}
+
+/* ============================================================
+   撥號確認視窗
+   ============================================================ */
+
+function openCallDialog(tel, label) {
+  state.pendingCall = { tel, label };
+
+  const messages = {
+    "110": "遇到壞人、車禍或東西被偷，才需要打 110。",
+    "119": "有人受傷、生病很嚴重或發生火災，才需要打 119。",
+    "112": "手機沒有訊號或人在國外時使用，會幫您轉接緊急單位。",
+  };
+
+  dom.callDialogIcon.textContent = tel === "112" ? "📱" : tel === "119" ? "🚒" : "👮";
+  dom.callDialogTitle.textContent = `要撥打 ${label || tel} 嗎？`;
+  dom.callDialogText.textContent =
+    messages[tel] || "請確認這是您要打的電話，再按「現在撥打」。";
+  dom.callConfirm.textContent = `📞 撥打 ${tel}`;
+  dom.callDialog.showModal();
+  dom.callConfirm.focus();
+}
+
+function confirmCall() {
+  const pending = state.pendingCall;
+  dom.callDialog.close();
+  if (!pending) return;
+  showToast(`正在為您撥打 ${pending.tel}…`);
+  window.location.href = `tel:${pending.tel}`;
+  state.pendingCall = null;
+}
+
+/* ============================================================
+   上次看的教學
+   ============================================================ */
+
+function renderResume() {
+  const record = state.lastTask;
+  dom.resumeCard.innerHTML = "";
+
+  if (!record || !tasks[record.taskId] || state.openTask) {
+    dom.resumeCard.hidden = true;
+    return;
+  }
+
+  const task = tasks[record.taskId];
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "resume-btn";
+
+  const top = document.createElement("span");
+  top.className = "resume-top";
+
+  const label = document.createElement("span");
+  label.className = "resume-label";
+  label.textContent = "上次您在看";
+
+  const time = document.createElement("span");
+  time.className = "resume-time";
+  time.textContent = formatTime(record.at);
+
+  top.append(label, time);
+
+  const title = document.createElement("span");
+  title.className = "resume-title";
+  title.textContent = `${task.icon} ${task.title}`;
+
+  const arrow = document.createElement("span");
+  arrow.className = "resume-arrow";
+  arrow.setAttribute("aria-hidden", "true");
+  arrow.textContent = "→";
+
+  button.append(top, title, arrow);
+  button.addEventListener("click", () => openTask(record.taskId, record.systemId));
+  dom.resumeCard.append(button);
+  dom.resumeCard.hidden = false;
+}
+
+/* ============================================================
+   設定：家人電話
+   ============================================================ */
+
+function openSetup() {
+  renderContactRows(state.contacts);
+  syncVoiceUI();
+  setSetupStatus("");
+  dom.setupDialog.showModal();
+  window.setTimeout(() => {
+    const input = dom.setupDialog.querySelector(".contact-name");
+    if (input) input.focus();
+  }, 50);
+}
+
+function renderContactRows(contacts) {
+  dom.contactRows.innerHTML = "";
+  const rows = contacts.length ? contacts : [{ name: "", phone: "" }];
+  rows.forEach((contact) => dom.contactRows.append(createContactRow(contact)));
+  updateContactRowControls();
+}
+
+function createContactRow(contact) {
+  const row = document.createElement("div");
+  row.className = "contact-row";
+
+  const nameField = document.createElement("label");
+  nameField.className = "field";
+  const nameLabel = document.createElement("span");
+  nameLabel.className = "field-label";
+  nameLabel.textContent = "家人的稱呼";
+  const nameInput = document.createElement("input");
+  nameInput.type = "text";
+  nameInput.className = "contact-name";
+  nameInput.maxLength = 12;
+  nameInput.placeholder = "例如：阿明";
+  nameInput.autocomplete = "name";
+  nameInput.value = contact.name || "";
+  nameField.append(nameLabel, nameInput);
+
+  const phoneField = document.createElement("label");
+  phoneField.className = "field";
+  const phoneLabel = document.createElement("span");
+  phoneLabel.className = "field-label";
+  phoneLabel.textContent = "電話號碼";
+  const phoneInput = document.createElement("input");
+  phoneInput.type = "tel";
+  phoneInput.className = "contact-phone";
+  phoneInput.inputMode = "tel";
+  phoneInput.maxLength = 20;
+  phoneInput.placeholder = "例如：0912345678";
+  phoneInput.autocomplete = "tel";
+  phoneInput.value = contact.phone || "";
+  phoneField.append(phoneLabel, phoneInput);
+
+  const remove = document.createElement("button");
+  remove.type = "button";
+  remove.className = "remove-contact";
+  remove.textContent = "✕";
+  remove.setAttribute("aria-label", "刪除這位家人");
+  remove.addEventListener("click", () => {
+    row.remove();
+    if (!dom.contactRows.querySelector(".contact-row")) {
+      dom.contactRows.append(createContactRow({ name: "", phone: "" }));
+    }
+    updateContactRowControls();
+  });
+
+  row.append(nameField, phoneField, remove);
+  return row;
+}
+
+function updateContactRowControls() {
+  const rows = dom.contactRows.querySelectorAll(".contact-row");
+  rows.forEach((row) => {
+    const remove = row.querySelector(".remove-contact");
+    if (remove) remove.disabled = rows.length <= 1;
+  });
+  dom.addContact.disabled = rows.length >= 4;
+  dom.addContact.textContent =
+    rows.length >= 4 ? "最多 4 位家人" : "＋ 增加一位家人";
+}
+
+function normalizePhone(value) {
+  const trimmed = String(value).trim();
+  const plus = trimmed.startsWith("+");
+  const digits = trimmed.replace(/[^\d]/g, "");
+  return (plus ? "+" : "") + digits;
+}
+
+function isValidPhone(phone) {
+  return /^\+?\d{7,15}$/.test(phone);
+}
+
+function collectContacts() {
+  const rows = Array.from(dom.contactRows.querySelectorAll(".contact-row"));
+  const raw = rows
+    .map((row) => ({
+      name: row.querySelector(".contact-name").value.trim(),
+      phone: row.querySelector(".contact-phone").value.trim(),
+    }))
+    .filter((item) => item.name || item.phone);
+
+  if (!raw.length) {
+    return { error: "請至少填一位家人的稱呼和電話。" };
+  }
+
+  for (const item of raw) {
+    if (!item.name) return { error: "請填寫家人的稱呼。" };
+    if (!item.phone) return { error: `請填寫「${item.name}」的電話號碼。` };
+    const normalized = normalizePhone(item.phone);
+    if (!isValidPhone(normalized)) {
+      return { error: `「${item.name}」的電話號碼好像不太對，請再檢查一次。` };
+    }
+    item.phone = normalized;
+  }
+
+  return { contacts: raw };
+}
+
+function saveContactsFromForm() {
+  const result = collectContacts();
+  if (result.error) {
+    setSetupStatus(result.error, "error");
+    return;
+  }
+
+  state.contacts = result.contacts;
+  store.saveContacts(state.contacts);
+  renderQuickHelp();
+  refreshOpenTask();
+  dom.setupDialog.close();
+  showToast("✅ 已儲存，謝謝您！");
+}
+
+function refreshOpenTask() {
+  if (!state.openTask) return;
+  const task = tasks[state.openTask.taskId];
+  const detail = state.openTask.section.querySelector(".task-detail");
+  if (task && detail) renderSteps(task, state.openTask.systemId, detail);
+}
+
+function clearAllContacts() {
+  if (!state.contacts.length) {
+    setSetupStatus("目前沒有設定家人的電話。", "info");
+    return;
+  }
+  if (!window.confirm("確定要清除所有家人的電話嗎？")) return;
+
+  state.contacts = [];
+  store.saveContacts([]);
+  renderQuickHelp();
+  refreshOpenTask();
+  renderContactRows([]);
+  setSetupStatus("已清除家人資料。", "ok");
+  showToast("已清除家人電話。");
+}
+
+function setSetupStatus(message, type) {
+  dom.setupStatus.textContent = message;
+  dom.setupStatus.className = "sheet-status";
+  if (type) dom.setupStatus.classList.add(`is-${type}`);
+}
+
+/* ============================================================
+   定位分享（「傳送我的位置」教學裡的功能）
+   ============================================================ */
+
 function createLocationCard() {
   const card = document.createElement("div");
   card.className = "location-card";
   card.innerHTML = `
     <h3 class="location-title">📍 傳送我的位置給家人</h3>
-    <p class="location-lead">上面的步驟是教您用 Apple 地圖（iPhone）或 Google 地圖（Android）傳位置。如果真的不會操作，再按下面的按鈕，這個網站會幫您把位置變成連結，一樣可以傳給家人。</p>
+    <p class="location-lead">出門在外，按一下下面的按鈕，就能把您現在的位置傳給家人。</p>
 
-    <button type="button" class="location-btn" id="locationBtn" aria-busy="false">
+    <button type="button" class="location-btn" aria-busy="false">
       <span class="location-btn-icon" aria-hidden="true">📍</span>
-      <span id="locationBtnText">取得我的位置</span>
+      <span class="location-btn-text">取得我的位置</span>
     </button>
 
-    <p class="location-status" id="locationStatus" role="status" aria-live="polite"></p>
+    <p class="location-status" role="status" aria-live="polite"></p>
 
-    <div class="location-result" id="locationResult" hidden>
-      <p class="location-address" id="locationAddress">已經找到您的位置</p>
-      <p class="location-coords" id="locationCoords"></p>
-      <p class="location-accuracy" id="locationAccuracy"></p>
-      <p class="location-time" id="locationTime"></p>
+    <div class="location-result" hidden>
+      <p class="location-address">✅ 已經找到您的位置</p>
+      <p class="location-coords"></p>
+      <p class="location-accuracy"></p>
+      <p class="location-time"></p>
 
-      <div class="location-map-links">
-        <a class="location-map-link" id="locationGoogleMapLink" href="#" target="_blank" rel="noopener">
-          🗺️ 在 Google 地圖看
-        </a>
-        <a class="location-map-link" id="locationAppleMapLink" href="#" target="_blank" rel="noopener">
-          🍎 在 Apple 地圖看
-        </a>
-      </div>
+      <a class="location-map-link" href="#" target="_blank" rel="noopener">
+        🗺️ 在地圖上看我的位置
+      </a>
 
       <div class="location-actions">
-        <button type="button" class="location-action location-action-primary" id="locationShareBtn">
+        <button type="button" class="location-action location-action-primary" data-action="share">
           📤 分享給家人
         </button>
-        <button type="button" class="location-action" id="locationCopyBtn">
+        <button type="button" class="location-action" data-action="copy">
           📋 複製位置連結
         </button>
-        <a class="location-action location-action-line" id="locationLineLink" href="#" target="_blank" rel="noopener">
+        <a class="location-action location-action-line" data-action="line" href="#" target="_blank" rel="noopener">
           💚 用 LINE 傳送
         </a>
-        <a class="location-action" id="locationSmsLink" href="#">
+        <a class="location-action" data-action="sms" href="#">
           💬 用簡訊傳送
         </a>
       </div>
@@ -1167,24 +1155,21 @@ function createLocationCard() {
   return card;
 }
 
-// 把定位卡片的按鈕接上功能
 function wireLocationCard(card) {
-  const $ = (id) => card.querySelector("#" + id);
+  const query = (selector) => card.querySelector(selector);
 
-  const btn = $("locationBtn");
-  const btnText = $("locationBtnText");
-  const status = $("locationStatus");
-  const result = $("locationResult");
-  const address = $("locationAddress");
-  const coords = $("locationCoords");
-  const accuracy = $("locationAccuracy");
-  const timeEl = $("locationTime");
-  const googleMapLink = $("locationGoogleMapLink");
-  const appleMapLink = $("locationAppleMapLink");
-  const shareBtn = $("locationShareBtn");
-  const copyBtn = $("locationCopyBtn");
-  const lineLink = $("locationLineLink");
-  const smsLink = $("locationSmsLink");
+  const button = query(".location-btn");
+  const buttonText = query(".location-btn-text");
+  const status = query(".location-status");
+  const result = query(".location-result");
+  const coords = query(".location-coords");
+  const accuracy = query(".location-accuracy");
+  const timeEl = query(".location-time");
+  const mapLink = query(".location-map-link");
+  const shareButton = query('[data-action="share"]');
+  const copyButton = query('[data-action="copy"]');
+  const lineLink = query('[data-action="line"]');
+  const smsLink = query('[data-action="sms"]');
 
   let lastLocation = null;
   let isLocating = false;
@@ -1192,70 +1177,70 @@ function wireLocationCard(card) {
   function setStatus(text, type) {
     status.textContent = text;
     status.classList.remove("is-error", "is-ok");
-    if (type) status.classList.add("is-" + type);
+    if (type) status.classList.add(`is-${type}`);
   }
 
-  function buildMessage(loc) {
+  function buildMessage(location) {
     return (
       "我現在的位置：\n" +
-      "Google 地圖：" + loc.googleMapUrl + "\n" +
-      "Apple 地圖：" + loc.appleMapUrl + "\n" +
-      "（座標 " + loc.coordsText + "，時間 " + loc.timeText + "）"
+      location.mapUrl +
+      "\n（座標 " +
+      location.coordsText +
+      "，時間 " +
+      location.timeText +
+      "）"
     );
   }
 
   function buildSmsHref(message) {
     const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    return "sms:" + (isIOS ? "&" : "?") + "body=" + encodeURIComponent(message);
+    return `sms:${isIOS ? "&" : "?"}body=${encodeURIComponent(message)}`;
   }
 
   function buildLineHref(message) {
-    // LINE 分享網址：開啟 LINE 後，讓使用者選擇要傳給哪位家人
-    return "https://line.me/R/msg/text/?" + encodeURIComponent(message);
+    return `https://line.me/R/msg/text/?${encodeURIComponent(message)}`;
   }
 
   function renderPosition(position) {
     const lat = position.coords.latitude;
     const lng = position.coords.longitude;
     const acc = Math.round(position.coords.accuracy || 0);
-    const coordsText = lat.toFixed(6) + ", " + lng.toFixed(6);
-    const googleMapUrl = "https://www.google.com/maps?q=" + lat.toFixed(6) + "," + lng.toFixed(6);
-    const appleMapUrl = "https://maps.apple.com/?q=" + lat.toFixed(6) + "," + lng.toFixed(6);
+    const coordsText = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+    const mapUrl = `https://www.google.com/maps?q=${lat.toFixed(6)},${lng.toFixed(6)}`;
     const timeText = new Date().toLocaleString("zh-TW", { hour12: false });
 
     lastLocation = {
-      lat: lat,
-      lng: lng,
+      lat,
+      lng,
       accuracy: acc,
-      coordsText: coordsText,
-      googleMapUrl: googleMapUrl,
-      appleMapUrl: appleMapUrl,
-      timeText: timeText,
+      coordsText,
+      mapUrl,
+      timeText,
     };
     lastLocation.message = buildMessage(lastLocation);
 
-    address.textContent = "✅ 已經找到您的位置";
-    coords.textContent = "緯度 " + lat.toFixed(6) + "　經度 " + lng.toFixed(6);
+    coords.textContent = `緯度 ${lat.toFixed(6)}　經度 ${lng.toFixed(6)}`;
     accuracy.textContent =
       acc > 0
-        ? "定位誤差大約 " + acc + " 公尺" + (acc > 200 ? "（室內或收訊較弱時，位置會比較不準）" : "")
+        ? `定位誤差大約 ${acc} 公尺${acc > 200 ? "（室內或收訊較弱時，位置會比較不準）" : ""}`
         : "";
-    timeEl.textContent = "更新時間：" + timeText;
-    googleMapLink.href = googleMapUrl;
-    appleMapLink.href = appleMapUrl;
+    timeEl.textContent = `更新時間：${timeText}`;
+    mapLink.href = mapUrl;
     smsLink.href = buildSmsHref(lastLocation.message);
     lineLink.href = buildLineHref(lastLocation.message);
 
     result.hidden = false;
-    btnText.textContent = "🔄 重新取得位置";
+    buttonText.textContent = "🔄 重新取得位置";
     setStatus("位置已取得，可以按下面的按鈕傳給家人。", "ok");
   }
 
-  function errorMessage(err) {
-    if (!err) return "取得位置時發生問題，請再按一次。";
-    if (err.code === 1) return "沒有取得定位權限。請在瀏覽器網址列旁允許「位置」，再按一次按鈕。";
-    if (err.code === 2) return "目前找不到定位訊號。請到窗邊或空曠處，再按一次按鈕。";
-    if (err.code === 3) return "等太久沒有收到位置。請再按一次按鈕。";
+  function errorMessage(error) {
+    if (!error) return "取得位置時發生問題，請再按一次。";
+    if (error.code === 1) {
+      return "沒有取得定位權限。請在瀏覽器網址列旁允許「位置」，再按一次按鈕。";
+    }
+    if (error.code === 2) return "目前找不到定位訊號。請到窗邊或空曠處，再按一次按鈕。";
+    if (error.code === 3) return "等太久沒有收到位置。請再按一次按鈕。";
     return "取得位置時發生問題，請再按一次。";
   }
 
@@ -1269,34 +1254,34 @@ function wireLocationCard(card) {
 
     if (!window.isSecureContext) {
       setStatus(
-        "定位功能需要 HTTPS 網址。請用 GitHub Pages 的網址開啟；本機測試請用 http://localhost。",
+        "定位功能需要 HTTPS 網址。用 GitHub Pages 的網址就沒問題；本機測試請用 http://localhost。",
         "error"
       );
       return;
     }
 
     isLocating = true;
-    btn.disabled = true;
-    btn.setAttribute("aria-busy", "true");
-    btnText.textContent = "正在找您的位置…";
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
+    buttonText.textContent = "正在找您的位置…";
     setStatus("正在透過 GPS 找位置，請稍等（最多 20 秒）。");
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
         isLocating = false;
-        btn.disabled = false;
-        btn.setAttribute("aria-busy", "false");
+        button.disabled = false;
+        button.setAttribute("aria-busy", "false");
         renderPosition(position);
       },
-      (err) => {
+      (error) => {
         isLocating = false;
-        btn.disabled = false;
-        btn.setAttribute("aria-busy", "false");
-        btnText.textContent = lastLocation ? "🔄 重新取得位置" : "📍 再試一次";
+        button.disabled = false;
+        button.setAttribute("aria-busy", "false");
+        buttonText.textContent = lastLocation ? "🔄 重新取得位置" : "📍 再試一次";
         setStatus(
           lastLocation
-            ? errorMessage(err) + " 下面顯示的是上一次取得的位置（" + lastLocation.timeText + "）。"
-            : errorMessage(err),
+            ? `${errorMessage(error)} 下面顯示的是上一次取得的位置（${lastLocation.timeText}）。`
+            : errorMessage(error),
           "error"
         );
       },
@@ -1324,10 +1309,10 @@ function wireLocationCard(card) {
       textarea.style.position = "fixed";
       textarea.style.top = "-1000px";
       textarea.style.opacity = "0";
-      document.body.appendChild(textarea);
+      document.body.append(textarea);
       textarea.select();
       const ok = document.execCommand("copy");
-      document.body.removeChild(textarea);
+      textarea.remove();
       return ok;
     } catch (e) {
       return false;
@@ -1342,14 +1327,11 @@ function wireLocationCard(card) {
 
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: "我的位置",
-          text: lastLocation.message,
-        });
+        await navigator.share({ title: "我的位置", text: lastLocation.message });
         setStatus("已開啟分享選單，請選擇要傳給哪位家人。", "ok");
         return;
-      } catch (err) {
-        if (err && err.name === "AbortError") return;
+      } catch (e) {
+        if (e && e.name === "AbortError") return;
       }
     }
 
@@ -1357,14 +1339,14 @@ function wireLocationCard(card) {
     setStatus(
       copied
         ? "這個瀏覽器沒有分享選單，位置連結已複製，請貼到訊息裡傳給家人。"
-        : "無法自動分享，請按「在 Google 地圖看」或「在 Apple 地圖看」後，複製網址傳給家人。",
+        : "無法自動分享，請按「在地圖上看」後，複製網址傳給家人。",
       copied ? "ok" : "error"
     );
   }
 
-  btn.addEventListener("click", getMyLocation);
-  shareBtn.addEventListener("click", shareLocation);
-  copyBtn.addEventListener("click", async () => {
+  button.addEventListener("click", getMyLocation);
+  shareButton.addEventListener("click", shareLocation);
+  copyButton.addEventListener("click", async () => {
     const ok = await copyText();
     setStatus(
       ok ? "位置資訊已複製！請貼到訊息裡傳給家人。" : "複製失敗，請按「在地圖上看」後複製網址。",
@@ -1372,3 +1354,240 @@ function wireLocationCard(card) {
     );
   });
 }
+
+/* ============================================================
+   事件綁定
+   ============================================================ */
+
+function wireHeader() {
+  document.querySelectorAll(".font-btn").forEach((button) => {
+    button.addEventListener("click", () => {
+      applyFont(button.dataset.size, { announce: true });
+    });
+  });
+
+  dom.voiceToggle.addEventListener("click", () => {
+    setVoiceEnabled(!state.voiceEnabled, { announce: true });
+  });
+
+  dom.themeToggle.addEventListener("click", () => {
+    applyTheme(state.theme === "dark" ? "light" : "dark", { announce: true });
+  });
+
+  dom.settingsBtn.addEventListener("click", openSetup);
+}
+
+function wireSections() {
+  dom.categorySections.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const taskButton = target.closest(".task-btn");
+    if (taskButton) {
+      openTask(taskButton.dataset.task);
+      return;
+    }
+
+    const backButton = target.closest(".back-btn");
+    if (backButton) {
+      closeTask(backButton.closest(".category-section"));
+      return;
+    }
+
+    const tab = target.closest(".system-tab");
+    if (tab) {
+      selectSystem(tab.dataset.system);
+      return;
+    }
+
+    if (target.closest(".start-guide")) {
+      startGuide();
+      return;
+    }
+
+    const speakButton = target.closest(".step-speak");
+    if (speakButton) {
+      speakStep(Number(speakButton.dataset.step));
+      return;
+    }
+  });
+}
+
+function wireDialogs() {
+  dom.setupClose.addEventListener("click", () => dom.setupDialog.close());
+  dom.addContact.addEventListener("click", () => {
+    if (dom.contactRows.querySelectorAll(".contact-row").length >= 4) return;
+    const row = createContactRow({ name: "", phone: "" });
+    dom.contactRows.append(row);
+    updateContactRowControls();
+    row.querySelector(".contact-name").focus();
+  });
+  dom.saveSetup.addEventListener("click", saveContactsFromForm);
+  dom.clearContacts.addEventListener("click", clearAllContacts);
+  dom.voiceCheckbox.addEventListener("change", () => {
+    setVoiceEnabled(dom.voiceCheckbox.checked);
+  });
+  dom.installHelpBtn.addEventListener("click", () => dom.installDialog.showModal());
+
+  dom.guideClose.addEventListener("click", () => dom.guideDialog.close());
+  dom.guidePrev.addEventListener("click", () => {
+    if (state.guide) goToGuideStep(state.guide.index - 1);
+  });
+  dom.guideNext.addEventListener("click", () => {
+    if (!state.guide) return;
+    if (state.guide.done) {
+      dom.guideDialog.close();
+      return;
+    }
+    const task = tasks[state.guide.taskId];
+    const system = getSystem(task, state.guide.systemId);
+    if (state.guide.index >= system.steps.length - 1) {
+      finishGuide();
+      return;
+    }
+    goToGuideStep(state.guide.index + 1);
+  });
+  dom.guideSpeak.addEventListener("click", () => {
+    if (!state.guide || state.guide.done) return;
+    const task = tasks[state.guide.taskId];
+    const system = getSystem(task, state.guide.systemId);
+    speakGuide(personalize(system.steps[state.guide.index]));
+  });
+  dom.guideRestart.addEventListener("click", () => {
+    if (!state.guide) return;
+    state.guide.index = 0;
+    state.guide.done = false;
+    renderGuide({ focus: true });
+  });
+  dom.guideDialog.addEventListener("close", () => {
+    state.guide = null;
+    guideSpeechToken += 1;
+    stopSpeech();
+    dom.guideStatus.textContent = "";
+  });
+  dom.guideDialog.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      dom.guideNext.click();
+    } else if (event.key === "ArrowLeft" && !dom.guidePrev.hidden && !dom.guidePrev.disabled) {
+      event.preventDefault();
+      dom.guidePrev.click();
+    }
+  });
+
+  dom.callCancel.addEventListener("click", () => {
+    state.pendingCall = null;
+    dom.callDialog.close();
+  });
+  dom.callConfirm.addEventListener("click", confirmCall);
+  dom.callDialog.addEventListener("close", () => {
+    state.pendingCall = null;
+  });
+
+  dom.installClose.addEventListener("click", () => dom.installDialog.close());
+  dom.installDone.addEventListener("click", () => dom.installDialog.close());
+  dom.installBtn.addEventListener("click", handleInstall);
+
+  [dom.setupDialog, dom.installDialog].forEach((dialog) => {
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  });
+}
+
+function wireGlobal() {
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const link = target.closest("[data-confirm-call]");
+    if (!link) return;
+    event.preventDefault();
+    openCallDialog(link.dataset.tel || "", link.dataset.confirmCall);
+  });
+
+  dom.toTop.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
+  });
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      dom.toTop.classList.toggle("show", window.scrollY > 400);
+    },
+    { passive: true }
+  );
+
+  window.addEventListener("online", () => {
+    updateOnlineState();
+    showToast("🌐 網路已恢復。");
+  });
+  window.addEventListener("offline", () => {
+    updateOnlineState();
+    showToast("📴 目前沒有網路，教學仍可以看。");
+  });
+}
+
+function updateOnlineState() {
+  dom.banner.hidden = navigator.onLine !== false;
+  dom.banner.classList.toggle("is-offline", navigator.onLine === false);
+}
+
+/* ============================================================
+   PWA：安裝與離線
+   ============================================================ */
+
+function setupPwa() {
+  if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js").catch(() => {
+        /* 離線功能無法使用時，網站仍可正常操作 */
+      });
+    });
+  }
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    state.deferredInstall = event;
+    updateInstallUI();
+  });
+
+  window.addEventListener("appinstalled", () => {
+    state.deferredInstall = null;
+    updateInstallUI();
+    showToast("✅ 已加到主畫面，謝謝您！");
+  });
+
+  updateInstallUI();
+}
+
+function isStandalone() {
+  const displayStandalone =
+    window.matchMedia && window.matchMedia("(display-mode: standalone)").matches;
+  return displayStandalone || window.navigator.standalone === true;
+}
+
+function updateInstallUI() {
+  dom.installBtn.hidden = isStandalone();
+}
+
+async function handleInstall() {
+  if (state.deferredInstall) {
+    const prompt = state.deferredInstall;
+    state.deferredInstall = null;
+    prompt.prompt();
+    try {
+      await prompt.userChoice;
+    } catch (e) {
+      /* 使用者取消也沒關係 */
+    }
+    updateInstallUI();
+    return;
+  }
+  dom.installDialog.showModal();
+}
+
+/* ============================================================
+   啟動
+   ============================================================ */
+
+init();

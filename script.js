@@ -810,7 +810,17 @@ taskButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     const taskId = btn.getAttribute("data-task");
     const task = tasks[taskId];
-    if (!task) return;
+    if (!task) {
+      // 舊快取的 script.js 找不到新按鈕的資料時，不要毫無反應
+      const section = btn.closest(".category-section");
+      if (section) {
+        getTaskTitleEl(section).textContent = "這個項目暫時沒有內容";
+        const steps = getTaskStepsEl(section);
+        if (steps) steps.textContent = "請重新整理網頁（按 Ctrl + F5，手機請下拉重新整理）後再試一次。";
+        section.querySelector(".task-detail").hidden = false;
+      }
+      return;
+    }
 
     currentTaskId = taskId;
     currentSection = btn.closest(".category-section");

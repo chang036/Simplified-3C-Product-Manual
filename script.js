@@ -9,8 +9,8 @@
    4. 裝置自動判斷、字級記憶、離線使用（PWA）
    ============================================================ */
 
-import { categories, emergencyNumbers, tasks } from "./js/tasks.js?v=noaction1";
-import * as store from "./js/store.js?v=noaction1";
+import { categories, emergencyNumbers, tasks } from "./js/tasks.js?v=location1";
+import * as store from "./js/store.js?v=location1";
 import { speak, stop as stopSpeech, isSpeechSupported } from "./js/speech.js";
 import { detectPlatform, isPlatformMatch, preferredSystemId } from "./js/device.js";
 
@@ -1115,7 +1115,7 @@ function createLocationCard() {
   card.className = "location-card";
   card.innerHTML = `
     <h3 class="location-title">📍 傳送我的位置給家人</h3>
-    <p class="location-lead">出門在外，按一下下面的按鈕，就能把您現在的位置傳給家人。</p>
+    <p class="location-lead">如果已經會用手機的地圖（iPhone 用 Apple 地圖、Android 用 Google 地圖），請照上面的步驟自己傳。下面的按鈕留給真的不會用的人，按一下也能取得位置。</p>
 
     <button type="button" class="location-btn" aria-busy="false">
       <span class="location-btn-icon" aria-hidden="true">📍</span>

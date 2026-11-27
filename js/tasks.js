@@ -66,7 +66,150 @@ export const emergencyNumbers = [
 ];
 
 export const tasks = {
+
   /* ==================== 手機 ==================== */
+  wifi: {
+    category: "phone",
+    icon: "📶",
+    title: "連 Wi-Fi / 忘記 Wi-Fi 密碼怎麼辦",
+    systems: [
+      {
+        id: "ios",
+        name: "蘋果手機（iPhone）",
+        icon: "🍎",
+        steps: [
+          "打開「設定」app（齒輪圖示）。",
+          "點一下「Wi-Fi」，把開關打開。",
+          "點一下家裡的 Wi-Fi 名稱。",
+          "輸入密碼，按「加入」，出現打勾就成功了。",
+          "忘記密碼時：先看數據機背面的貼紙，或問家人。",
+          "一直連不上時，點 Wi-Fi 名稱旁的 ⓘ →「忘記此網路」，再重新輸入密碼。"
+        ],
+        shortName: "iPhone"
+      },
+      {
+        id: "android",
+        name: "安卓手機（Android）",
+        icon: "🤖",
+        steps: [
+          "打開「設定」app。",
+          "點「網路和網際網路」→「Wi-Fi」，把開關打開。",
+          "點一下家裡的 Wi-Fi 名稱。",
+          "輸入密碼，按「連線」。",
+          "忘記密碼時：看數據機背面的貼紙，或問家人。",
+          "一直連不上時，長按 Wi-Fi 名稱 →「忘記網路」，再重新輸入密碼。"
+        ],
+        shortName: "Android"
+      }
+    ],
+    summary: "連 Wi-Fi / 忘記 Wi-Fi 密碼怎麼辦。"
+  },
+
+  bluetooth: {
+    category: "phone",
+    icon: "🔵",
+    title: "連藍牙",
+    systems: [
+      {
+        id: "ios",
+        name: "蘋果手機（iPhone）",
+        icon: "🍎",
+        steps: [
+          "打開「設定」app。",
+          "點一下「藍牙」，把開關打開（變成綠色）。",
+          "打開耳機或喇叭，讓它進入配對模式（指示燈會閃爍）。",
+          "在「我的裝置」下面，點一下耳機或喇叭的名稱。",
+          "出現「已連線」就成功了，可以播放音樂試聽。",
+          "第一次連好後，下次打開通常會自動連上。"
+        ],
+        shortName: "iPhone"
+      },
+      {
+        id: "android",
+        name: "安卓手機（Android）",
+        icon: "🤖",
+        steps: [
+          "從螢幕上方往下滑，點一下「藍牙」圖示。",
+          "如果找不到，到「設定」→「連線」→「藍牙」，把開關打開。",
+          "打開耳機或喇叭，讓它進入配對模式（指示燈會閃爍）。",
+          "在「配對新裝置」下面，點一下耳機或喇叭的名稱。",
+          "出現「已連線」就成功了，可以播放音樂試聽。",
+          "連不上時，先取消配對再試一次，或請家人幫忙。"
+        ],
+        shortName: "Android"
+      }
+    ],
+    summary: "連藍牙。"
+  },
+
+  photo: {
+    category: "phone",
+    icon: "📷",
+    title: "拍照",
+    summary: "用相機拍下照片，存在手機裡。",
+    systems: [
+      {
+        id: "ios",
+        name: "蘋果手機（iPhone）",
+        shortName: "iPhone",
+        icon: "🍎",
+        steps: [
+          "找到「相機」圖示（灰色相機），點一下打開。",
+          "把手機對準要拍的東西。",
+          "按下面白色的大圓圈「快門」。",
+          "照片會自動存到「照片」app，點左下角小圖可以看。",
+          "要自拍時，按畫面下方的翻轉鏡頭圖示。",
+        ],
+      },
+      {
+        id: "android",
+        name: "安卓手機（Android）",
+        shortName: "Android",
+        icon: "🤖",
+        steps: [
+          "找到「相機」app，點一下打開。",
+          "把手機對準要拍的東西。",
+          "按下面的白色圓形快門。",
+          "照片會存到「相簿」或「照片」。",
+          "要自拍時，按翻轉鏡頭的圖示。",
+        ],
+      },
+    ],
+  },
+
+  phone_screenshot: {
+    category: "phone",
+    icon: "📸",
+    title: "手機截圖",
+    systems: [
+      {
+        id: "ios",
+        name: "蘋果手機（iPhone）",
+        icon: "🍎",
+        steps: [
+          "同時按一下側邊鍵和音量加大鍵。",
+          "如果是舊款 iPhone（有圓形 Home 鍵），按 Home 鍵和側邊鍵。",
+          "聽到快門聲或看到畫面閃一下，就成功了。",
+          "到「照片」app →「相簿」→「螢幕截圖」可以查看。"
+        ],
+        shortName: "iPhone"
+      },
+      {
+        id: "android",
+        name: "安卓手機（Android）",
+        icon: "🤖",
+        steps: [
+          "同時按住電源鍵和音量減小鍵。",
+          "看到畫面閃一下就成功了。",
+          "如果沒反應，從螢幕上方往下滑，點「截圖」。",
+          "到「相簿」→「截圖」資料夾可以查看。"
+        ],
+        shortName: "Android"
+      }
+    ],
+    summary: "手機截圖。"
+  },
+
   call: {
     category: "phone",
     icon: "📞",
@@ -98,41 +241,6 @@ export const tasks = {
           "按綠色話筒按鈕撥打。",
           "接通後，把手機拿到耳邊說話。",
           "說完話，按紅色按鈕掛斷。",
-        ],
-      },
-    ],
-  },
-
-  message: {
-    category: "phone",
-    icon: "💬",
-    title: "傳訊息給家人",
-    summary: "用簡訊傳一句話給家人，讓家人知道您的情況。",
-    systems: [
-      {
-        id: "ios",
-        name: "蘋果手機（iPhone）",
-        shortName: "iPhone",
-        icon: "🍎",
-        steps: [
-          "找到藍色對話框的「訊息」app，點一下打開。",
-          "點右上角的「撰寫」圖示（一支筆和紙）。",
-          "在「收件人」輸入{{family}}的名字或電話。",
-          "點下面的輸入框，輸入要說的話。",
-          "按右邊藍色向上的箭頭「傳送」。",
-        ],
-      },
-      {
-        id: "android",
-        name: "安卓手機（Android）",
-        shortName: "Android",
-        icon: "🤖",
-        steps: [
-          "找到「訊息」app（藍色對話框），點一下打開。",
-          "點右下角的「開始對話」。",
-          "輸入{{family}}的名字或電話號碼。",
-          "點輸入框，輸入要說的話。",
-          "按送出箭頭，訊息就會傳出去。",
         ],
       },
     ],
@@ -174,12 +282,11 @@ export const tasks = {
     ],
   },
 
-  location: {
+  message: {
     category: "phone",
-    icon: "📍",
-    title: "傳送我的位置給家人",
-    summary: "出門在外，把現在的位置傳給家人，讓家人安心。",
-    tip: "在室內定位可能比較不準，走到窗邊或戶外會更準。",
+    icon: "💬",
+    title: "傳訊息給家人",
+    summary: "用簡訊傳一句話給家人，讓家人知道您的情況。",
     systems: [
       {
         id: "ios",
@@ -187,12 +294,11 @@ export const tasks = {
         shortName: "iPhone",
         icon: "🍎",
         steps: [
-          "用 Safari 打開這個網站「安心操作助理」。",
-          "在「手機」分類裡，點「傳送我的位置給家人」。",
-          "按藍色大按鈕「取得我的位置」。",
-          "畫面問「是否允許使用位置」時，按「允許」。",
-          "等幾秒鐘，畫面會顯示您的位置與地圖。",
-          "按「分享給家人」選{{family}}，或按「用 LINE 傳送」。",
+          "找到藍色對話框的「訊息」app，點一下打開。",
+          "點右上角的「撰寫」圖示（一支筆和紙）。",
+          "在「收件人」輸入{{family}}的名字或電話。",
+          "點下面的輸入框，輸入要說的話。",
+          "按右邊藍色向上的箭頭「傳送」。",
         ],
       },
       {
@@ -201,22 +307,22 @@ export const tasks = {
         shortName: "Android",
         icon: "🤖",
         steps: [
-          "用 Chrome 打開這個網站「安心操作助理」。",
-          "在「手機」分類裡，點「傳送我的位置給家人」。",
-          "按藍色大按鈕「取得我的位置」。",
-          "畫面問「是否允許使用位置」時，按「允許」。",
-          "等幾秒鐘，畫面會顯示您的位置與地圖。",
-          "按「分享給家人」選{{family}}，或按「用 LINE 傳送」。",
+          "找到「訊息」app（藍色對話框），點一下打開。",
+          "點右下角的「開始對話」。",
+          "輸入{{family}}的名字或電話號碼。",
+          "點輸入框，輸入要說的話。",
+          "按送出箭頭，訊息就會傳出去。",
         ],
       },
     ],
   },
 
-  photo: {
+  location: {
     category: "phone",
-    icon: "📷",
-    title: "拍照",
-    summary: "用相機拍下照片，存在手機裡。",
+    icon: "📍",
+    title: "傳送我的位置給家人",
+    summary: "用手機的地圖 App 把現在的位置傳給家人，讓家人安心。",
+    tip: "下面的藍色按鈕是留給真的不會用地圖的人；會用地圖的人照上面步驟自己傳就好。室內定位會比較不準，走到窗邊或戶外再傳。",
     systems: [
       {
         id: "ios",
@@ -224,11 +330,12 @@ export const tasks = {
         shortName: "iPhone",
         icon: "🍎",
         steps: [
-          "找到「相機」圖示（灰色相機），點一下打開。",
-          "把手機對準要拍的東西。",
-          "按下面白色的大圓圈「快門」。",
-          "照片會自動存到「照片」app，點左下角小圖可以看。",
-          "要自拍時，按畫面下方的翻轉鏡頭圖示。",
+          "在 iPhone 打開「地圖」App（Apple 地圖，地圖圖示）。",
+          "點一下畫面上代表您位置的藍色圓點，會出現您的位置卡片。",
+          "點卡片上的「分享我的位置」（Share My Location）。",
+          "選「訊息」或 LINE，再選{{family}}。",
+          "按「傳送」，家人點開訊息裡的連結，就能在 Apple 地圖看到您。",
+          "如果真的不會用，再往下滑，按本頁藍色按鈕「取得我的位置」。",
         ],
       },
       {
@@ -237,14 +344,89 @@ export const tasks = {
         shortName: "Android",
         icon: "🤖",
         steps: [
-          "找到「相機」app，點一下打開。",
-          "把手機對準要拍的東西。",
-          "按下面的白色圓形快門。",
-          "照片會存到「相簿」或「照片」。",
-          "要自拍時，按翻轉鏡頭的圖示。",
+          "在安卓手機打開「Google 地圖」App。",
+          "點一下畫面上代表您位置的藍色圓點，會出現您的位置卡片。",
+          "點卡片上的「分享位置」（Share location）。",
+          "選「訊息」或 LINE，再選{{family}}。",
+          "按「傳送」，家人點開訊息裡的連結，就能在 Google 地圖看到您。",
+          "如果真的不會用，再往下滑，按本頁藍色按鈕「取得我的位置」。",
         ],
       },
     ],
+  },
+
+  storage: {
+    category: "phone",
+    icon: "🧹",
+    title: "清理空間",
+    systems: [
+      {
+        id: "ios",
+        name: "蘋果手機（iPhone）",
+        icon: "🍎",
+        steps: [
+          "打開「設定」→「一般」→「iPhone 儲存空間」。",
+          "等一會兒，看看哪個 app 佔最多空間。",
+          "點很少用的 app →「卸載 app」或「刪除 app」。",
+          "打開「照片」app，選不要的照片，按垃圾桶刪除。",
+          "到「照片」→「相簿」→「最近刪除」，按「全部刪除」才會真的清掉。",
+          "刪之前先確認照片已備份，才不會後悔。"
+        ],
+        shortName: "iPhone"
+      },
+      {
+        id: "android",
+        name: "安卓手機（Android）",
+        icon: "🤖",
+        steps: [
+          "打開「設定」→「儲存空間」。",
+          "看看哪一項佔最多空間。",
+          "點那個 app →「清除快取」；不用的 app 按「卸載」。",
+          "打開「相簿」，選不要的照片，按垃圾桶刪除。",
+          "到「資源回收桶」按「清空」，空間才會真正空出來。",
+          "刪之前先確認照片已備份，才不會後悔。"
+        ],
+        shortName: "Android"
+      }
+    ],
+    summary: "清理空間。"
+  },
+
+  find_phone: {
+    category: "phone",
+    icon: "🔎",
+    title: "找回不見的手機",
+    systems: [
+      {
+        id: "ios",
+        name: "蘋果手機（iPhone）",
+        icon: "🍎",
+        steps: [
+          "跟家人借手機或電腦，打開瀏覽器到 icloud.com/find。",
+          "輸入自己的 Apple 帳號和密碼。",
+          "點「尋找我的 iPhone」，選不見的手機。",
+          "點「播放聲音」，手機會響，順著聲音找。",
+          "如果不在附近，點「標記為遺失」，手機會鎖住。",
+          "如果手機沒電或沒網路，只能看到最後一次的位置。"
+        ],
+        shortName: "iPhone"
+      },
+      {
+        id: "android",
+        name: "安卓手機（Android）",
+        icon: "🤖",
+        steps: [
+          "跟家人借手機或電腦，打開瀏覽器到 google.com/android/find。",
+          "登入自己的 Google 帳號。",
+          "選不見的手機。",
+          "點「播放聲音」，手機會響，順著聲音找。",
+          "點「保護裝置」或「遺失模式」，可以先鎖住手機。",
+          "如果手機沒電或沒網路，只能看到最後一次的位置。"
+        ],
+        shortName: "Android"
+      }
+    ],
+    summary: "找回不見的手機。"
   },
 
   phone_font: {
@@ -282,6 +464,44 @@ export const tasks = {
       },
     ],
   },
+
+  mobile_pay: {
+    category: "phone",
+    icon: "💳",
+    title: "行動支付（Apple Pay、Google Pay 等）",
+    systems: [
+      {
+        id: "ios",
+        name: "蘋果手機（iPhone）",
+        icon: "🍎",
+        steps: [
+          "打開「錢包」app，點右上角的「＋」。",
+          "選「信用卡或金融卡」，照指示加入卡片。",
+          "在店家看到 Apple Pay 標誌時，連按兩下側邊鍵。",
+          "把手機上方靠近感應區，聽到「嗶」就成功了。",
+          "也可以用台灣 Pay：打開 app → 選銀行 → 掃描 QR Code 付款。",
+          "小提醒：不管誰打電話問驗證碼，都不要說出來。"
+        ],
+        shortName: "iPhone"
+      },
+      {
+        id: "android",
+        name: "安卓手機（Android）",
+        icon: "🤖",
+        steps: [
+          "打開「Google 錢包」（Google Pay）app，點「加入」。",
+          "照指示加入信用卡或金融卡。",
+          "看到感應付款標誌時，解鎖手機，把背面靠近感應區。",
+          "三星手機可用 Samsung Pay：加入卡片後，從下方往上滑選卡片再感應。",
+          "台灣 Pay：打開 app → 選銀行 → 掃 QR Code 或出示條碼。",
+          "小提醒：不管誰打電話問驗證碼，都不要說出來。"
+        ],
+        shortName: "Android"
+      }
+    ],
+    summary: "行動支付（Apple Pay、Google Pay 等）。"
+  },
+
 
   /* ==================== 電腦 ==================== */
   browse: {
@@ -387,6 +607,220 @@ export const tasks = {
       },
     ],
   },
+
+  computer_wifi: {
+    category: "computer",
+    icon: "📶",
+    title: "連 Wi-Fi",
+    systems: [
+      {
+        id: "windows",
+        name: "Windows 電腦",
+        icon: "🪟",
+        steps: [
+          "按一下工作列右下角的網路圖示（像無線電波）。",
+          "點一下家裡 Wi-Fi 的名稱。",
+          "輸入密碼，按「連線」。",
+          "出現「已連線」就可以上網了。",
+          "忘記密碼時：看數據機背面的貼紙，或問家人。",
+          "一直連不上時，點「忘記此網路」，再重新輸入密碼。"
+        ],
+        shortName: "Windows"
+      },
+      {
+        id: "mac",
+        name: "Mac 電腦",
+        icon: "🍎",
+        steps: [
+          "點一下畫面右上角的 Wi-Fi 圖示（扇形）。",
+          "打開 Wi-Fi，點家裡的網路名稱。",
+          "輸入密碼，按「加入」。",
+          "圖示變成實心扇形就連上了。",
+          "忘記密碼時：看數據機背面的貼紙，或問家人。",
+          "一直連不上時，選「忘記此網路」，再重新輸入密碼。"
+        ],
+        shortName: "Mac"
+      }
+    ],
+    summary: "連 Wi-Fi。"
+  },
+
+  computer_bluetooth: {
+    category: "computer",
+    icon: "🔵",
+    title: "連藍牙",
+    systems: [
+      {
+        id: "windows",
+        name: "Windows 電腦",
+        icon: "🪟",
+        steps: [
+          "按 Windows 鍵加 I，打開設定。",
+          "點「藍牙與裝置」（舊版叫「裝置」）。",
+          "把藍牙開關打開。",
+          "打開耳機或喇叭，讓它進入配對模式（指示燈會閃）。",
+          "點「新增裝置」→「藍牙」，選裝置名稱。",
+          "出現「已連線」就成功了。"
+        ],
+        shortName: "Windows"
+      },
+      {
+        id: "mac",
+        name: "Mac 電腦",
+        icon: "🍎",
+        steps: [
+          "點左上角蘋果 →「系統設定」→「藍牙」。",
+          "把藍牙開關打開。",
+          "讓耳機或喇叭進入配對模式（指示燈會閃）。",
+          "在裝置清單點一下名稱，按「連線」。",
+          "出現「已連線」就成功了。"
+        ],
+        shortName: "Mac"
+      }
+    ],
+    summary: "連藍牙。"
+  },
+
+  computer_search: {
+    category: "computer",
+    icon: "🔎",
+    title: "用搜尋找東西",
+    systems: [
+      {
+        id: "windows",
+        name: "Windows 電腦",
+        icon: "🪟",
+        steps: [
+          "按一下鍵盤上的 Windows 鍵（畫著窗戶那顆）。",
+          "直接打字，例如「計算機」或「天氣」。",
+          "點一下出現的結果，就會打開。",
+          "想找檔案，也可以直接輸入檔案名稱。"
+        ],
+        shortName: "Windows"
+      },
+      {
+        id: "mac",
+        name: "Mac 電腦",
+        icon: "🍎",
+        steps: [
+          "按 Command 鍵加空白鍵，會出現放大鏡。",
+          "直接打字，例如「計算機」。",
+          "點一下結果，就會打開。",
+          "也可以點畫面右上角的放大鏡圖示搜尋。"
+        ],
+        shortName: "Mac"
+      }
+    ],
+    summary: "用搜尋找東西。"
+  },
+
+  computer_phishing: {
+    category: "computer",
+    icon: "⚠️",
+    title: "辨識詭異信件",
+    systems: [
+      {
+        id: "windows",
+        name: "Windows 電腦",
+        icon: "🪟",
+        steps: [
+          "收到「包裹未領」「帳號被盜」「中獎」的信，先不要點裡面的連結。",
+          "把滑鼠停在連結上（不要按），看看網址是不是很奇怪。",
+          "不要回信，也不要輸入密碼或驗證碼。",
+          "按「檢舉為垃圾郵件」或直接刪除。",
+          "如果已經點了或輸入資料，請立刻改密碼。",
+          "拿不定主意時，撥 165 查證或問家人。"
+        ],
+        shortName: "Windows"
+      },
+      {
+        id: "mac",
+        name: "Mac 電腦",
+        icon: "🍎",
+        steps: [
+          "收到「包裹未領」「帳號被盜」「中獎」的信，先不要點裡面的連結。",
+          "把滑鼠停在連結上（不要按），看看網址是不是很奇怪。",
+          "不要回信，也不要輸入密碼或驗證碼。",
+          "按「垃圾郵件」或直接刪除。",
+          "如果已經點了或輸入資料，請立刻改密碼。",
+          "拿不定主意時，撥 165 查證或問家人。"
+        ],
+        shortName: "Mac"
+      }
+    ],
+    summary: "辨識詭異信件。"
+  },
+
+  computer_ime: {
+    category: "computer",
+    icon: "🔤",
+    title: "中文輸入切換",
+    systems: [
+      {
+        id: "windows",
+        name: "Windows 電腦",
+        icon: "🪟",
+        steps: [
+          "看一下工作列右下角，現在是「中」還是「英」。",
+          "點一下它，選「中文（注音）」就可以打注音符號。",
+          "也可以用快捷鍵 Shift 加 Alt 切換中英文。",
+          "想打英文時，切到「英」再打字。",
+          "打錯時，按 Backspace 鍵刪除。"
+        ],
+        shortName: "Windows"
+      },
+      {
+        id: "mac",
+        name: "Mac 電腦",
+        icon: "🍎",
+        steps: [
+          "點一下畫面右上角的輸入法圖示（例如「A」或「注」）。",
+          "選「注音」就可以打注音符號。",
+          "按 Control 加空白鍵，也可以更換輸入法。",
+          "想打英文時，選「ABC」。",
+          "打錯時，按 Delete 鍵刪除。"
+        ],
+        shortName: "Mac"
+      }
+    ],
+    summary: "中文輸入切換。"
+  },
+
+  computer_resolution: {
+    category: "computer",
+    icon: "🔠",
+    title: "調整解析度讓字更大",
+    systems: [
+      {
+        id: "windows",
+        name: "Windows 電腦",
+        icon: "🪟",
+        steps: [
+          "在桌面空白處按一下滑鼠右鍵，點「顯示設定」。",
+          "找到「縮放與版面配置」。",
+          "把「縮放」改成 125% 或 150%。",
+          "點「保留變更」，字和圖示就會變大。",
+          "如果還是太小，再用「調整字體大小」把字放大。"
+        ],
+        shortName: "Windows"
+      },
+      {
+        id: "mac",
+        name: "Mac 電腦",
+        icon: "🍎",
+        steps: [
+          "點左上角蘋果 →「系統設定」→「顯示器」。",
+          "點「解析度」。",
+          "選較大的顯示方式，不要選最小的。",
+          "回到「顯示」，點「文字大小」把字調大。",
+          "看網頁時，也可以按 Command 加加號放大。"
+        ],
+        shortName: "Mac"
+      }
+    ],
+    summary: "調整解析度讓字更大。"
+  },
+
 
   /* ==================== 智慧手錶 ==================== */
   watch_call: {
@@ -527,6 +961,288 @@ export const tasks = {
     ],
   },
 
+  watch_heart_rate: {
+    category: "watch",
+    icon: "❤️",
+    title: "心跳（心率）",
+    systems: [
+      {
+        id: "watch-ios",
+        name: "Apple Watch",
+        icon: "⌚",
+        steps: [
+          "在手錶上打開「心率」app（心形圖示）。",
+          "戴穩手錶，等幾秒，會出現每分鐘心跳次數。",
+          "在 iPhone「健康」app →「心率」可以看以前的記錄。",
+          "作用：看心臟跳得快不快、穩不穩定。休息時每分鐘 60～100 下是常見範圍。",
+          "警訊：休息時一直超過 120 或低於 50，又頭昏、胸悶，請盡快就醫；胸痛或快昏倒請打 119。"
+        ],
+        shortName: "Apple Watch"
+      },
+      {
+        id: "watch-android",
+        name: "安卓手錶（Wear OS）",
+        icon: "⌚",
+        steps: [
+          "在手錶上打開「心率」app。",
+          "戴穩手錶，等幾秒看每分鐘心跳次數。",
+          "在手機的 Samsung Health 或 Google 健康 app 可以看記錄。",
+          "作用：看心臟跳得快不快、穩不穩定。休息時每分鐘 60～100 下是常見範圍。",
+          "警訊：休息時一直超過 120 或低於 50，又頭昏、胸悶，請盡快就醫；胸痛或快昏倒請打 119。"
+        ],
+        shortName: "Wear OS"
+      }
+    ],
+    summary: "心跳（心率）。"
+  },
+
+  watch_blood_oxygen: {
+    category: "watch",
+    icon: "🩸",
+    title: "血氧（SpO₂）",
+    systems: [
+      {
+        id: "watch-ios",
+        name: "Apple Watch",
+        icon: "⌚",
+        steps: [
+          "在手錶上打開「血氧」app。",
+          "把手錶戴緊、手掌朝上不要動，等大約 15 秒。",
+          "數字是血液裡氧氣的比例，一般約 95%～100%。",
+          "手指冰冷、指甲油或手錶太鬆會不準，可以先擦乾再量。",
+          "警訊：低於 92%，或喘不過氣、嘴唇發紫，請盡快就醫或打 119。"
+        ],
+        shortName: "Apple Watch"
+      },
+      {
+        id: "watch-android",
+        name: "安卓手錶（Wear OS）",
+        icon: "⌚",
+        steps: [
+          "在手錶上打開「血氧」（SpO₂）app；若找不到，到手機健康 app 查看。",
+          "戴穩手錶、手放平不要動，等大約 15 秒。",
+          "數字一般約 95%～100%。",
+          "手指冰冷或手錶太鬆會不準。",
+          "警訊：低於 92%，或喘不過氣、嘴唇發紫，請盡快就醫或打 119。"
+        ],
+        shortName: "Wear OS"
+      }
+    ],
+    summary: "血氧（SpO₂）。"
+  },
+
+  watch_ecg: {
+    category: "watch",
+    icon: "📈",
+    title: "心電圖（ECG）",
+    systems: [
+      {
+        id: "watch-ios",
+        name: "Apple Watch",
+        icon: "⌚",
+        steps: [
+          "在手錶上打開「心電圖」app（或在 iPhone「健康」app 裡打開）。",
+          "坐下來，手指按住錶冠約 30 秒，不要說話。",
+          "畫面會顯示「竇性心律」或「心房顫動」等結果。",
+          "作用：記錄心臟的電氣活動，幫醫生發現心律不整。",
+          "警訊：胸痛、冒冷汗、快昏倒時，不要等手錶量，直接打 119。",
+          "手錶結果不是醫生診斷；異常請帶著記錄去看醫生。"
+        ],
+        shortName: "Apple Watch"
+      },
+      {
+        id: "watch-android",
+        name: "安卓手錶（Wear OS）",
+        icon: "⌚",
+        steps: [
+          "部分三星手錶才有「心電圖」app，先在錶上找找看。",
+          "照螢幕指示，把手指放在感應處約 30 秒。",
+          "結果會顯示是否正常，或疑似心房顫動。",
+          "作用：記錄心電活動，幫醫生判斷心律問題。",
+          "警訊：胸痛、昏倒、呼吸困難請直接打 119。",
+          "如果沒有這個 app，代表手錶不支援，可改量心跳與血氧。"
+        ],
+        shortName: "Wear OS"
+      }
+    ],
+    summary: "心電圖（ECG）。"
+  },
+
+  watch_sleep: {
+    category: "watch",
+    icon: "😴",
+    title: "睡眠紀錄",
+    systems: [
+      {
+        id: "watch-ios",
+        name: "Apple Watch",
+        icon: "⌚",
+        steps: [
+          "在 iPhone「健康」app →「睡眠」設定睡覺和起床時間。",
+          "睡覺時戴著手錶，隔天會顯示睡了多久、深睡與淺睡時間。",
+          "作用：看有沒有睡飽、睡眠品質好不好。",
+          "如果長期少於 6 小時、白天一直想睡，建議找醫生討論。",
+          "警訊：打呼很大聲又突然停住呼吸、睡醒頭痛，可能是睡眠呼吸中止症，請就醫。"
+        ],
+        shortName: "Apple Watch"
+      },
+      {
+        id: "watch-android",
+        name: "安卓手錶（Wear OS）",
+        icon: "⌚",
+        steps: [
+          "在 Samsung Health 或 Google 健康 app →「睡眠」設定睡眠時間。",
+          "戴著手錶睡覺，隔天看睡眠時間與階段。",
+          "作用：看有沒有睡飽、睡眠品質好不好。",
+          "警訊：打呼很大聲、呼吸停頓、白天一直想睡，請就醫檢查。"
+        ],
+        shortName: "Wear OS"
+      }
+    ],
+    summary: "睡眠紀錄。"
+  },
+
+  watch_other_health: {
+    category: "watch",
+    icon: "🌡️",
+    title: "其他健康指標（溫度、呼吸、壓力）",
+    systems: [
+      {
+        id: "watch-ios",
+        name: "Apple Watch",
+        icon: "⌚",
+        steps: [
+          "在 iPhone「健康」app 可找「手腕溫度」、「呼吸頻率」與「心率變異性」。",
+          "睡覺時戴著手錶，會自動記錄，做為平常的參考值。",
+          "作用：溫度變高可能是發燒；呼吸變快可能表示喘；壓力與 HRV 反映身體疲勞。",
+          "警訊：發高燒、呼吸每分鐘超過 25 次、胸悶或喘不過氣，請盡快就醫；呼吸困難請打 119。",
+          "這些數字僅供參考，身體不舒服還是要找醫生。"
+        ],
+        shortName: "Apple Watch"
+      },
+      {
+        id: "watch-android",
+        name: "安卓手錶（Wear OS）",
+        icon: "⌚",
+        steps: [
+          "在 Samsung Health 或健康 app 找「皮膚溫度」、「呼吸速率」與「壓力」（部分手錶支援）。",
+          "睡覺戴著手錶，會記錄與平常的差異。",
+          "作用：溫度變高可能是發燒；呼吸變快可能表示喘；壓力指數反映疲勞。",
+          "警訊：發高燒、呼吸很快、胸悶或喘不過氣，請盡快就醫；呼吸困難請打 119。",
+          "如果手錶沒有這些功能，代表機型不支援。"
+        ],
+        shortName: "Wear OS"
+      }
+    ],
+    summary: "其他健康指標（溫度、呼吸、壓力）。"
+  },
+
+  watch_fall_sos: {
+    category: "watch",
+    icon: "🆘",
+    title: "跌倒偵測與 SOS",
+    systems: [
+      {
+        id: "watch-ios",
+        name: "Apple Watch",
+        icon: "⌚",
+        steps: [
+          "在 iPhone「設定」→「SOS 緊急服務」，打開「跌倒偵測」。",
+          "再打開「自動撥打緊急電話」，並確認有設定家人為緊急聯絡人。",
+          "作用：嚴重跌倒且您沒有回應時，手錶會自動通知家人並撥打 119。",
+          "如果誤觸，手錶會先提示，點「我沒跌倒」就可取消。",
+          "警訊：跌倒後意識不清、劇痛、站不起來，請不要勉強起身，打 119 或等救援。"
+        ],
+        shortName: "Apple Watch"
+      },
+      {
+        id: "watch-android",
+        name: "安卓手錶（Wear OS）",
+        icon: "⌚",
+        steps: [
+          "在 Samsung Health 或手錶「設定」→「安全」打開「跌倒偵測」（部分機型支援）。",
+          "設定緊急聯絡人與自動撥號。",
+          "作用：嚴重跌倒時自動傳訊息或撥打緊急電話給家人。",
+          "警訊：跌倒後頭痛、嘔吐、不能動，請留在原地打 119。",
+          "若手錶沒有此功能，可設 SOS：連按電源鍵幾次撥打緊急電話。"
+        ],
+        shortName: "Wear OS"
+      }
+    ],
+    summary: "跌倒偵測與 SOS。"
+  },
+
+  watch_find_phone: {
+    category: "watch",
+    icon: "🔔",
+    title: "讓手錶把手機叫出來",
+    systems: [
+      {
+        id: "watch-ios",
+        name: "Apple Watch",
+        icon: "⌚",
+        steps: [
+          "在手錶上打開「尋找裝置」app（雷達圖示）。",
+          "點一下您的 iPhone 名稱。",
+          "點「播放聲音」，手機會發出聲音。",
+          "順著聲音找到手機後，點「停止」。",
+          "如果手機靜音或沒電，用家人的手機到 icloud.com/find 找。"
+        ],
+        shortName: "Apple Watch"
+      },
+      {
+        id: "watch-android",
+        name: "安卓手錶（Wear OS）",
+        icon: "⌚",
+        steps: [
+          "在手錶上打開「尋找我的手機」app。",
+          "點「播放聲音」。",
+          "手機會響，順著聲音找。",
+          "找到後，按手錶上的「停止」。",
+          "如果找不到，用家人的手機到 google.com/android/find 找。"
+        ],
+        shortName: "Wear OS"
+      }
+    ],
+    summary: "讓手錶把手機叫出來。"
+  },
+
+  watch_camera_remote: {
+    category: "watch",
+    icon: "📷",
+    title: "用錶遙控手機相機拍照",
+    systems: [
+      {
+        id: "watch-ios",
+        name: "Apple Watch",
+        icon: "⌚",
+        steps: [
+          "在 iPhone 上打開「相機」app。",
+          "在手錶上打開「相機」app（或從智慧型堆疊點相機圖示）。",
+          "手錶會顯示手機的畫面，先喬好角度。",
+          "點手錶上的快門鍵拍照。",
+          "照片會存到手機的相簿。"
+        ],
+        shortName: "Apple Watch"
+      },
+      {
+        id: "watch-android",
+        name: "安卓手錶（Wear OS）",
+        icon: "⌚",
+        steps: [
+          "在手機上打開「相機」app。",
+          "在手錶上打開「相機遙控」app（若沒有，請家人從 Google Play 安裝）。",
+          "手錶會顯示手機畫面，先喬好角度。",
+          "點手錶上的快門鍵拍照。",
+          "到手機相簿看照片。"
+        ],
+        shortName: "Wear OS"
+      }
+    ],
+    summary: "用錶遙控手機相機拍照。"
+  },
+
+
   /* ==================== 安心求助 ==================== */
   scam: {
     category: "safety",
@@ -581,698 +1297,7 @@ export const tasks = {
       },
     ],
   },
-  wifi: {
-    category: "phone",
-    icon: "📶",
-    title: "連 Wi-Fi / 忘記 Wi-Fi 密碼怎麼辦",
-    systems: [
-      {
-        id: "ios",
-        name: "蘋果手機（iPhone）",
-        icon: "🍎",
-        steps: [
-          "打開「設定」app（齒輪圖示）。",
-          "點一下「Wi-Fi」，把開關打開。",
-          "點一下家裡的 Wi-Fi 名稱。",
-          "輸入密碼，按「加入」，出現打勾就成功了。",
-          "忘記密碼時：先看數據機背面的貼紙，或問家人。",
-          "一直連不上時，點 Wi-Fi 名稱旁的 ⓘ →「忘記此網路」，再重新輸入密碼。"
-        ],
-        shortName: "iPhone"
-      },
-      {
-        id: "android",
-        name: "安卓手機（Android）",
-        icon: "🤖",
-        steps: [
-          "打開「設定」app。",
-          "點「網路和網際網路」→「Wi-Fi」，把開關打開。",
-          "點一下家裡的 Wi-Fi 名稱。",
-          "輸入密碼，按「連線」。",
-          "忘記密碼時：看數據機背面的貼紙，或問家人。",
-          "一直連不上時，長按 Wi-Fi 名稱 →「忘記網路」，再重新輸入密碼。"
-        ],
-        shortName: "Android"
-      }
-    ],
-    summary: "連 Wi-Fi / 忘記 Wi-Fi 密碼怎麼辦。"
-  },
-  bluetooth: {
-    category: "phone",
-    icon: "🔵",
-    title: "連藍牙",
-    systems: [
-      {
-        id: "ios",
-        name: "蘋果手機（iPhone）",
-        icon: "🍎",
-        steps: [
-          "打開「設定」app。",
-          "點一下「藍牙」，把開關打開（變成綠色）。",
-          "打開耳機或喇叭，讓它進入配對模式（指示燈會閃爍）。",
-          "在「我的裝置」下面，點一下耳機或喇叭的名稱。",
-          "出現「已連線」就成功了，可以播放音樂試聽。",
-          "第一次連好後，下次打開通常會自動連上。"
-        ],
-        shortName: "iPhone"
-      },
-      {
-        id: "android",
-        name: "安卓手機（Android）",
-        icon: "🤖",
-        steps: [
-          "從螢幕上方往下滑，點一下「藍牙」圖示。",
-          "如果找不到，到「設定」→「連線」→「藍牙」，把開關打開。",
-          "打開耳機或喇叭，讓它進入配對模式（指示燈會閃爍）。",
-          "在「配對新裝置」下面，點一下耳機或喇叭的名稱。",
-          "出現「已連線」就成功了，可以播放音樂試聽。",
-          "連不上時，先取消配對再試一次，或請家人幫忙。"
-        ],
-        shortName: "Android"
-      }
-    ],
-    summary: "連藍牙。"
-  },
-  phone_screenshot: {
-    category: "phone",
-    icon: "📸",
-    title: "手機截圖",
-    systems: [
-      {
-        id: "ios",
-        name: "蘋果手機（iPhone）",
-        icon: "🍎",
-        steps: [
-          "同時按一下側邊鍵和音量加大鍵。",
-          "如果是舊款 iPhone（有圓形 Home 鍵），按 Home 鍵和側邊鍵。",
-          "聽到快門聲或看到畫面閃一下，就成功了。",
-          "到「照片」app →「相簿」→「螢幕截圖」可以查看。"
-        ],
-        shortName: "iPhone"
-      },
-      {
-        id: "android",
-        name: "安卓手機（Android）",
-        icon: "🤖",
-        steps: [
-          "同時按住電源鍵和音量減小鍵。",
-          "看到畫面閃一下就成功了。",
-          "如果沒反應，從螢幕上方往下滑，點「截圖」。",
-          "到「相簿」→「截圖」資料夾可以查看。"
-        ],
-        shortName: "Android"
-      }
-    ],
-    summary: "手機截圖。"
-  },
-  storage: {
-    category: "phone",
-    icon: "🧹",
-    title: "清理空間",
-    systems: [
-      {
-        id: "ios",
-        name: "蘋果手機（iPhone）",
-        icon: "🍎",
-        steps: [
-          "打開「設定」→「一般」→「iPhone 儲存空間」。",
-          "等一會兒，看看哪個 app 佔最多空間。",
-          "點很少用的 app →「卸載 app」或「刪除 app」。",
-          "打開「照片」app，選不要的照片，按垃圾桶刪除。",
-          "到「照片」→「相簿」→「最近刪除」，按「全部刪除」才會真的清掉。",
-          "刪之前先確認照片已備份，才不會後悔。"
-        ],
-        shortName: "iPhone"
-      },
-      {
-        id: "android",
-        name: "安卓手機（Android）",
-        icon: "🤖",
-        steps: [
-          "打開「設定」→「儲存空間」。",
-          "看看哪一項佔最多空間。",
-          "點那個 app →「清除快取」；不用的 app 按「卸載」。",
-          "打開「相簿」，選不要的照片，按垃圾桶刪除。",
-          "到「資源回收桶」按「清空」，空間才會真正空出來。",
-          "刪之前先確認照片已備份，才不會後悔。"
-        ],
-        shortName: "Android"
-      }
-    ],
-    summary: "清理空間。"
-  },
-  find_phone: {
-    category: "phone",
-    icon: "🔎",
-    title: "找回不見的手機",
-    systems: [
-      {
-        id: "ios",
-        name: "蘋果手機（iPhone）",
-        icon: "🍎",
-        steps: [
-          "跟家人借手機或電腦，打開瀏覽器到 icloud.com/find。",
-          "輸入自己的 Apple 帳號和密碼。",
-          "點「尋找我的 iPhone」，選不見的手機。",
-          "點「播放聲音」，手機會響，順著聲音找。",
-          "如果不在附近，點「標記為遺失」，手機會鎖住。",
-          "如果手機沒電或沒網路，只能看到最後一次的位置。"
-        ],
-        shortName: "iPhone"
-      },
-      {
-        id: "android",
-        name: "安卓手機（Android）",
-        icon: "🤖",
-        steps: [
-          "跟家人借手機或電腦，打開瀏覽器到 google.com/android/find。",
-          "登入自己的 Google 帳號。",
-          "選不見的手機。",
-          "點「播放聲音」，手機會響，順著聲音找。",
-          "點「保護裝置」或「遺失模式」，可以先鎖住手機。",
-          "如果手機沒電或沒網路，只能看到最後一次的位置。"
-        ],
-        shortName: "Android"
-      }
-    ],
-    summary: "找回不見的手機。"
-  },
-  mobile_pay: {
-    category: "phone",
-    icon: "💳",
-    title: "行動支付（Apple Pay、Google Pay 等）",
-    systems: [
-      {
-        id: "ios",
-        name: "蘋果手機（iPhone）",
-        icon: "🍎",
-        steps: [
-          "打開「錢包」app，點右上角的「＋」。",
-          "選「信用卡或金融卡」，照指示加入卡片。",
-          "在店家看到 Apple Pay 標誌時，連按兩下側邊鍵。",
-          "把手機上方靠近感應區，聽到「嗶」就成功了。",
-          "也可以用台灣 Pay：打開 app → 選銀行 → 掃描 QR Code 付款。",
-          "小提醒：不管誰打電話問驗證碼，都不要說出來。"
-        ],
-        shortName: "iPhone"
-      },
-      {
-        id: "android",
-        name: "安卓手機（Android）",
-        icon: "🤖",
-        steps: [
-          "打開「Google 錢包」（Google Pay）app，點「加入」。",
-          "照指示加入信用卡或金融卡。",
-          "看到感應付款標誌時，解鎖手機，把背面靠近感應區。",
-          "三星手機可用 Samsung Pay：加入卡片後，從下方往上滑選卡片再感應。",
-          "台灣 Pay：打開 app → 選銀行 → 掃 QR Code 或出示條碼。",
-          "小提醒：不管誰打電話問驗證碼，都不要說出來。"
-        ],
-        shortName: "Android"
-      }
-    ],
-    summary: "行動支付（Apple Pay、Google Pay 等）。"
-  },
-  computer_wifi: {
-    category: "computer",
-    icon: "📶",
-    title: "連 Wi-Fi",
-    systems: [
-      {
-        id: "windows",
-        name: "Windows 電腦",
-        icon: "🪟",
-        steps: [
-          "按一下工作列右下角的網路圖示（像無線電波）。",
-          "點一下家裡 Wi-Fi 的名稱。",
-          "輸入密碼，按「連線」。",
-          "出現「已連線」就可以上網了。",
-          "忘記密碼時：看數據機背面的貼紙，或問家人。",
-          "一直連不上時，點「忘記此網路」，再重新輸入密碼。"
-        ],
-        shortName: "Windows"
-      },
-      {
-        id: "mac",
-        name: "Mac 電腦",
-        icon: "🍎",
-        steps: [
-          "點一下畫面右上角的 Wi-Fi 圖示（扇形）。",
-          "打開 Wi-Fi，點家裡的網路名稱。",
-          "輸入密碼，按「加入」。",
-          "圖示變成實心扇形就連上了。",
-          "忘記密碼時：看數據機背面的貼紙，或問家人。",
-          "一直連不上時，選「忘記此網路」，再重新輸入密碼。"
-        ],
-        shortName: "Mac"
-      }
-    ],
-    summary: "連 Wi-Fi。"
-  },
-  computer_bluetooth: {
-    category: "computer",
-    icon: "🔵",
-    title: "連藍牙",
-    systems: [
-      {
-        id: "windows",
-        name: "Windows 電腦",
-        icon: "🪟",
-        steps: [
-          "按 Windows 鍵加 I，打開設定。",
-          "點「藍牙與裝置」（舊版叫「裝置」）。",
-          "把藍牙開關打開。",
-          "打開耳機或喇叭，讓它進入配對模式（指示燈會閃）。",
-          "點「新增裝置」→「藍牙」，選裝置名稱。",
-          "出現「已連線」就成功了。"
-        ],
-        shortName: "Windows"
-      },
-      {
-        id: "mac",
-        name: "Mac 電腦",
-        icon: "🍎",
-        steps: [
-          "點左上角蘋果 →「系統設定」→「藍牙」。",
-          "把藍牙開關打開。",
-          "讓耳機或喇叭進入配對模式（指示燈會閃）。",
-          "在裝置清單點一下名稱，按「連線」。",
-          "出現「已連線」就成功了。"
-        ],
-        shortName: "Mac"
-      }
-    ],
-    summary: "連藍牙。"
-  },
-  computer_search: {
-    category: "computer",
-    icon: "🔎",
-    title: "用搜尋找東西",
-    systems: [
-      {
-        id: "windows",
-        name: "Windows 電腦",
-        icon: "🪟",
-        steps: [
-          "按一下鍵盤上的 Windows 鍵（畫著窗戶那顆）。",
-          "直接打字，例如「計算機」或「天氣」。",
-          "點一下出現的結果，就會打開。",
-          "想找檔案，也可以直接輸入檔案名稱。"
-        ],
-        shortName: "Windows"
-      },
-      {
-        id: "mac",
-        name: "Mac 電腦",
-        icon: "🍎",
-        steps: [
-          "按 Command 鍵加空白鍵，會出現放大鏡。",
-          "直接打字，例如「計算機」。",
-          "點一下結果，就會打開。",
-          "也可以點畫面右上角的放大鏡圖示搜尋。"
-        ],
-        shortName: "Mac"
-      }
-    ],
-    summary: "用搜尋找東西。"
-  },
-  computer_phishing: {
-    category: "computer",
-    icon: "⚠️",
-    title: "辨識詭異信件",
-    systems: [
-      {
-        id: "windows",
-        name: "Windows 電腦",
-        icon: "🪟",
-        steps: [
-          "收到「包裹未領」「帳號被盜」「中獎」的信，先不要點裡面的連結。",
-          "把滑鼠停在連結上（不要按），看看網址是不是很奇怪。",
-          "不要回信，也不要輸入密碼或驗證碼。",
-          "按「檢舉為垃圾郵件」或直接刪除。",
-          "如果已經點了或輸入資料，請立刻改密碼。",
-          "拿不定主意時，撥 165 查證或問家人。"
-        ],
-        shortName: "Windows"
-      },
-      {
-        id: "mac",
-        name: "Mac 電腦",
-        icon: "🍎",
-        steps: [
-          "收到「包裹未領」「帳號被盜」「中獎」的信，先不要點裡面的連結。",
-          "把滑鼠停在連結上（不要按），看看網址是不是很奇怪。",
-          "不要回信，也不要輸入密碼或驗證碼。",
-          "按「垃圾郵件」或直接刪除。",
-          "如果已經點了或輸入資料，請立刻改密碼。",
-          "拿不定主意時，撥 165 查證或問家人。"
-        ],
-        shortName: "Mac"
-      }
-    ],
-    summary: "辨識詭異信件。"
-  },
-  computer_ime: {
-    category: "computer",
-    icon: "🔤",
-    title: "中文輸入切換",
-    systems: [
-      {
-        id: "windows",
-        name: "Windows 電腦",
-        icon: "🪟",
-        steps: [
-          "看一下工作列右下角，現在是「中」還是「英」。",
-          "點一下它，選「中文（注音）」就可以打注音符號。",
-          "也可以用快捷鍵 Shift 加 Alt 切換中英文。",
-          "想打英文時，切到「英」再打字。",
-          "打錯時，按 Backspace 鍵刪除。"
-        ],
-        shortName: "Windows"
-      },
-      {
-        id: "mac",
-        name: "Mac 電腦",
-        icon: "🍎",
-        steps: [
-          "點一下畫面右上角的輸入法圖示（例如「A」或「注」）。",
-          "選「注音」就可以打注音符號。",
-          "按 Control 加空白鍵，也可以更換輸入法。",
-          "想打英文時，選「ABC」。",
-          "打錯時，按 Delete 鍵刪除。"
-        ],
-        shortName: "Mac"
-      }
-    ],
-    summary: "中文輸入切換。"
-  },
-  computer_resolution: {
-    category: "computer",
-    icon: "🔠",
-    title: "調整解析度讓字更大",
-    systems: [
-      {
-        id: "windows",
-        name: "Windows 電腦",
-        icon: "🪟",
-        steps: [
-          "在桌面空白處按一下滑鼠右鍵，點「顯示設定」。",
-          "找到「縮放與版面配置」。",
-          "把「縮放」改成 125% 或 150%。",
-          "點「保留變更」，字和圖示就會變大。",
-          "如果還是太小，再用「調整字體大小」把字放大。"
-        ],
-        shortName: "Windows"
-      },
-      {
-        id: "mac",
-        name: "Mac 電腦",
-        icon: "🍎",
-        steps: [
-          "點左上角蘋果 →「系統設定」→「顯示器」。",
-          "點「解析度」。",
-          "選較大的顯示方式，不要選最小的。",
-          "回到「顯示」，點「文字大小」把字調大。",
-          "看網頁時，也可以按 Command 加加號放大。"
-        ],
-        shortName: "Mac"
-      }
-    ],
-    summary: "調整解析度讓字更大。"
-  },
-  watch_heart_rate: {
-    category: "watch",
-    icon: "❤️",
-    title: "心跳（心率）",
-    systems: [
-      {
-        id: "watch-ios",
-        name: "Apple Watch",
-        icon: "⌚",
-        steps: [
-          "在手錶上打開「心率」app（心形圖示）。",
-          "戴穩手錶，等幾秒，會出現每分鐘心跳次數。",
-          "在 iPhone「健康」app →「心率」可以看以前的記錄。",
-          "作用：看心臟跳得快不快、穩不穩定。休息時每分鐘 60～100 下是常見範圍。",
-          "警訊：休息時一直超過 120 或低於 50，又頭昏、胸悶，請盡快就醫；胸痛或快昏倒請打 119。"
-        ],
-        shortName: "Apple Watch"
-      },
-      {
-        id: "watch-android",
-        name: "安卓手錶（Wear OS）",
-        icon: "⌚",
-        steps: [
-          "在手錶上打開「心率」app。",
-          "戴穩手錶，等幾秒看每分鐘心跳次數。",
-          "在手機的 Samsung Health 或 Google 健康 app 可以看記錄。",
-          "作用：看心臟跳得快不快、穩不穩定。休息時每分鐘 60～100 下是常見範圍。",
-          "警訊：休息時一直超過 120 或低於 50，又頭昏、胸悶，請盡快就醫；胸痛或快昏倒請打 119。"
-        ],
-        shortName: "Wear OS"
-      }
-    ],
-    summary: "心跳（心率）。"
-  },
-  watch_blood_oxygen: {
-    category: "watch",
-    icon: "🩸",
-    title: "血氧（SpO₂）",
-    systems: [
-      {
-        id: "watch-ios",
-        name: "Apple Watch",
-        icon: "⌚",
-        steps: [
-          "在手錶上打開「血氧」app。",
-          "把手錶戴緊、手掌朝上不要動，等大約 15 秒。",
-          "數字是血液裡氧氣的比例，一般約 95%～100%。",
-          "手指冰冷、指甲油或手錶太鬆會不準，可以先擦乾再量。",
-          "警訊：低於 92%，或喘不過氣、嘴唇發紫，請盡快就醫或打 119。"
-        ],
-        shortName: "Apple Watch"
-      },
-      {
-        id: "watch-android",
-        name: "安卓手錶（Wear OS）",
-        icon: "⌚",
-        steps: [
-          "在手錶上打開「血氧」（SpO₂）app；若找不到，到手機健康 app 查看。",
-          "戴穩手錶、手放平不要動，等大約 15 秒。",
-          "數字一般約 95%～100%。",
-          "手指冰冷或手錶太鬆會不準。",
-          "警訊：低於 92%，或喘不過氣、嘴唇發紫，請盡快就醫或打 119。"
-        ],
-        shortName: "Wear OS"
-      }
-    ],
-    summary: "血氧（SpO₂）。"
-  },
-  watch_ecg: {
-    category: "watch",
-    icon: "📈",
-    title: "心電圖（ECG）",
-    systems: [
-      {
-        id: "watch-ios",
-        name: "Apple Watch",
-        icon: "⌚",
-        steps: [
-          "在手錶上打開「心電圖」app（或在 iPhone「健康」app 裡打開）。",
-          "坐下來，手指按住錶冠約 30 秒，不要說話。",
-          "畫面會顯示「竇性心律」或「心房顫動」等結果。",
-          "作用：記錄心臟的電氣活動，幫醫生發現心律不整。",
-          "警訊：胸痛、冒冷汗、快昏倒時，不要等手錶量，直接打 119。",
-          "手錶結果不是醫生診斷；異常請帶著記錄去看醫生。"
-        ],
-        shortName: "Apple Watch"
-      },
-      {
-        id: "watch-android",
-        name: "安卓手錶（Wear OS）",
-        icon: "⌚",
-        steps: [
-          "部分三星手錶才有「心電圖」app，先在錶上找找看。",
-          "照螢幕指示，把手指放在感應處約 30 秒。",
-          "結果會顯示是否正常，或疑似心房顫動。",
-          "作用：記錄心電活動，幫醫生判斷心律問題。",
-          "警訊：胸痛、昏倒、呼吸困難請直接打 119。",
-          "如果沒有這個 app，代表手錶不支援，可改量心跳與血氧。"
-        ],
-        shortName: "Wear OS"
-      }
-    ],
-    summary: "心電圖（ECG）。"
-  },
-  watch_sleep: {
-    category: "watch",
-    icon: "😴",
-    title: "睡眠紀錄",
-    systems: [
-      {
-        id: "watch-ios",
-        name: "Apple Watch",
-        icon: "⌚",
-        steps: [
-          "在 iPhone「健康」app →「睡眠」設定睡覺和起床時間。",
-          "睡覺時戴著手錶，隔天會顯示睡了多久、深睡與淺睡時間。",
-          "作用：看有沒有睡飽、睡眠品質好不好。",
-          "如果長期少於 6 小時、白天一直想睡，建議找醫生討論。",
-          "警訊：打呼很大聲又突然停住呼吸、睡醒頭痛，可能是睡眠呼吸中止症，請就醫。"
-        ],
-        shortName: "Apple Watch"
-      },
-      {
-        id: "watch-android",
-        name: "安卓手錶（Wear OS）",
-        icon: "⌚",
-        steps: [
-          "在 Samsung Health 或 Google 健康 app →「睡眠」設定睡眠時間。",
-          "戴著手錶睡覺，隔天看睡眠時間與階段。",
-          "作用：看有沒有睡飽、睡眠品質好不好。",
-          "警訊：打呼很大聲、呼吸停頓、白天一直想睡，請就醫檢查。"
-        ],
-        shortName: "Wear OS"
-      }
-    ],
-    summary: "睡眠紀錄。"
-  },
-  watch_other_health: {
-    category: "watch",
-    icon: "🌡️",
-    title: "其他健康指標（溫度、呼吸、壓力）",
-    systems: [
-      {
-        id: "watch-ios",
-        name: "Apple Watch",
-        icon: "⌚",
-        steps: [
-          "在 iPhone「健康」app 可找「手腕溫度」、「呼吸頻率」與「心率變異性」。",
-          "睡覺時戴著手錶，會自動記錄，做為平常的參考值。",
-          "作用：溫度變高可能是發燒；呼吸變快可能表示喘；壓力與 HRV 反映身體疲勞。",
-          "警訊：發高燒、呼吸每分鐘超過 25 次、胸悶或喘不過氣，請盡快就醫；呼吸困難請打 119。",
-          "這些數字僅供參考，身體不舒服還是要找醫生。"
-        ],
-        shortName: "Apple Watch"
-      },
-      {
-        id: "watch-android",
-        name: "安卓手錶（Wear OS）",
-        icon: "⌚",
-        steps: [
-          "在 Samsung Health 或健康 app 找「皮膚溫度」、「呼吸速率」與「壓力」（部分手錶支援）。",
-          "睡覺戴著手錶，會記錄與平常的差異。",
-          "作用：溫度變高可能是發燒；呼吸變快可能表示喘；壓力指數反映疲勞。",
-          "警訊：發高燒、呼吸很快、胸悶或喘不過氣，請盡快就醫；呼吸困難請打 119。",
-          "如果手錶沒有這些功能，代表機型不支援。"
-        ],
-        shortName: "Wear OS"
-      }
-    ],
-    summary: "其他健康指標（溫度、呼吸、壓力）。"
-  },
-  watch_fall_sos: {
-    category: "watch",
-    icon: "🆘",
-    title: "跌倒偵測與 SOS",
-    systems: [
-      {
-        id: "watch-ios",
-        name: "Apple Watch",
-        icon: "⌚",
-        steps: [
-          "在 iPhone「設定」→「SOS 緊急服務」，打開「跌倒偵測」。",
-          "再打開「自動撥打緊急電話」，並確認有設定家人為緊急聯絡人。",
-          "作用：嚴重跌倒且您沒有回應時，手錶會自動通知家人並撥打 119。",
-          "如果誤觸，手錶會先提示，點「我沒跌倒」就可取消。",
-          "警訊：跌倒後意識不清、劇痛、站不起來，請不要勉強起身，打 119 或等救援。"
-        ],
-        shortName: "Apple Watch"
-      },
-      {
-        id: "watch-android",
-        name: "安卓手錶（Wear OS）",
-        icon: "⌚",
-        steps: [
-          "在 Samsung Health 或手錶「設定」→「安全」打開「跌倒偵測」（部分機型支援）。",
-          "設定緊急聯絡人與自動撥號。",
-          "作用：嚴重跌倒時自動傳訊息或撥打緊急電話給家人。",
-          "警訊：跌倒後頭痛、嘔吐、不能動，請留在原地打 119。",
-          "若手錶沒有此功能，可設 SOS：連按電源鍵幾次撥打緊急電話。"
-        ],
-        shortName: "Wear OS"
-      }
-    ],
-    summary: "跌倒偵測與 SOS。"
-  },
-  watch_find_phone: {
-    category: "watch",
-    icon: "🔔",
-    title: "讓手錶把手機叫出來",
-    systems: [
-      {
-        id: "watch-ios",
-        name: "Apple Watch",
-        icon: "⌚",
-        steps: [
-          "在手錶上打開「尋找裝置」app（雷達圖示）。",
-          "點一下您的 iPhone 名稱。",
-          "點「播放聲音」，手機會發出聲音。",
-          "順著聲音找到手機後，點「停止」。",
-          "如果手機靜音或沒電，用家人的手機到 icloud.com/find 找。"
-        ],
-        shortName: "Apple Watch"
-      },
-      {
-        id: "watch-android",
-        name: "安卓手錶（Wear OS）",
-        icon: "⌚",
-        steps: [
-          "在手錶上打開「尋找我的手機」app。",
-          "點「播放聲音」。",
-          "手機會響，順著聲音找。",
-          "找到後，按手錶上的「停止」。",
-          "如果找不到，用家人的手機到 google.com/android/find 找。"
-        ],
-        shortName: "Wear OS"
-      }
-    ],
-    summary: "讓手錶把手機叫出來。"
-  },
-  watch_camera_remote: {
-    category: "watch",
-    icon: "📷",
-    title: "用錶遙控手機相機拍照",
-    systems: [
-      {
-        id: "watch-ios",
-        name: "Apple Watch",
-        icon: "⌚",
-        steps: [
-          "在 iPhone 上打開「相機」app。",
-          "在手錶上打開「相機」app（或從智慧型堆疊點相機圖示）。",
-          "手錶會顯示手機的畫面，先喬好角度。",
-          "點手錶上的快門鍵拍照。",
-          "照片會存到手機的相簿。"
-        ],
-        shortName: "Apple Watch"
-      },
-      {
-        id: "watch-android",
-        name: "安卓手錶（Wear OS）",
-        icon: "⌚",
-        steps: [
-          "在手機上打開「相機」app。",
-          "在手錶上打開「相機遙控」app（若沒有，請家人從 Google Play 安裝）。",
-          "手錶會顯示手機畫面，先喬好角度。",
-          "點手錶上的快門鍵拍照。",
-          "到手機相簿看照片。"
-        ],
-        shortName: "Wear OS"
-      }
-    ],
-    summary: "用錶遙控手機相機拍照。"
-  },
+
 
   /* ==================== 生活實用 ==================== */
   weather: {
@@ -1422,6 +1447,7 @@ export const tasks = {
       },
     ],
   },
+
 
   /* ==================== 壞掉了怎麼辦 ==================== */
   phone_freeze: {
@@ -1573,5 +1599,5 @@ export const tasks = {
         ],
       },
     ],
-  },
+  }
 };
